@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="color-scheme" content="light dark"><meta name="darkreader-lock">
+<script>window.ITSE_API="https://script.google.com/macros/s/AKfycbyjnDv1nuT26T9S_Scg9R8Bg8p_ZT06GCzbPqbb0yatwGHZYJzlVyHsP_A80Qzjz25L/exec"</script>
 </head><body>
 <title>Generador ITSE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -47,7 +48,7 @@ h1,h2{font-family:var(--display);font-stretch:112%;margin:0;line-height:1.15;tex
 .tags{display:inline-flex;gap:3px;flex-wrap:wrap}
 .tag{all:unset;cursor:pointer;font:600 9.5px/1 var(--mono);letter-spacing:.02em;color:var(--data);background:var(--data-soft);border-radius:3px;padding:3px 4px}
 .tag:hover{outline:1px solid var(--data)}
-input[type=text],input[type=password],input[type=email],input[type=tel],input[type=date],select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:6px;padding:7px 9px;width:100%;min-width:0}
+input[type=text],input[type=password],input[type=email],input[type=tel],input[type=date],input[type=search],select,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1.5px solid var(--line);border-radius:6px;padding:7px 9px;width:100%;min-width:0}
 textarea{resize:vertical;min-height:72px;font-size:13px}
 #f_apoderados{min-height:120px}
 input:focus,select:focus,textarea:focus{border-color:var(--accent);outline:none;box-shadow:0 0 0 3px var(--accent-soft)}
@@ -114,9 +115,9 @@ table.items.mxt tr.on td{background:var(--data-soft)}
 .bar .risk b{font-family:var(--display);font-stretch:110%}
 .status{font-size:12.5px;color:var(--muted)}
 .status.ok{color:var(--accent)}.status.err{color:var(--bad)}
-body.locked .top,body.locked .layout,body.locked .bar{display:none}
+body:not(.authed) .top,body:not(.authed) .apptabs,body:not(.authed) .layout,body:not(.authed) .bar,body:not(.authed) .zv,body:not(.authed) .mdl{display:none!important}
 .login{display:none}
-body.locked .login{display:grid;place-items:center;min-height:100vh;min-height:100dvh;padding-block:24px}
+body:not(.authed) .login{display:grid;place-items:center;min-height:100vh;min-height:100dvh;padding-block:24px}
 .login-card{width:100%;max-width:360px;background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:8px;padding:24px 22px;display:flex;flex-direction:column;gap:12px}
 .login-card .eyebrow{font:500 12px var(--mono);letter-spacing:.03em;color:var(--muted)}
 .login-card h1{font-size:26px;font-weight:800;margin-bottom:4px}
@@ -406,32 +407,193 @@ b.mono{font-family:var(--mono);font-weight:600;font-size:12px;overflow-wrap:anyw
 .bkl li .chk{display:flex;align-items:flex-start;gap:6px;margin:0;min-width:0}
 .bkl li .chk span{min-width:0;overflow-wrap:anywhere}
 #bkUp .grid{margin-bottom:4px}
+/* v27: entrada, secciones, usuarios, banco de cocinas, visor con zoom */
+.top .brand{min-width:0}
+.secnav{display:flex;gap:4px;background:var(--sunk);border-radius:8px;padding:3px;margin-right:auto}
+.sec{all:unset;cursor:pointer;padding:7px 16px;border-radius:6px;font:700 13.5px var(--body);letter-spacing:.02em;color:var(--muted);display:inline-flex;align-items:center;gap:6px}
+.sec:hover{color:var(--ink)}
+.sec[aria-selected="true"]{background:var(--surface);color:var(--ink);box-shadow:0 1px 2px rgba(0,0,0,.14)}
+.sec:focus-visible,.apptab:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.cnt.q{display:inline-block;min-width:18px;padding:1px 5px;border-radius:9px;background:var(--r-alto);color:#fff;font:700 11px/1.4 var(--mono);text-align:center}
+h2 .cnt.q{vertical-align:middle;margin-left:6px}
+.who{display:flex;flex-direction:column;line-height:1.15;font-size:12.5px;text-align:right;padding:0 4px;max-width:220px}
+.who b{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.who .muted{font-size:11.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.btn.sync{font-weight:600;color:var(--accent);border-color:var(--accent-soft)}
+.btn.sync.warnb{color:var(--warn-ink);background:var(--warn-bg);border-color:var(--warn-bg)}
+.btn.sm{padding:6px 9px;font-size:12.5px}
+.btn.primary.sm{padding:6px 10px;font-size:12.5px}
+.btn.danger{color:var(--bad)}
+.btn.danger:hover{border-color:var(--bad)}
+.btn:disabled{opacity:.55;cursor:default}
+.lnk{all:unset;cursor:pointer;color:var(--data);text-decoration:underline;text-underline-offset:2px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+body.wide .pv{display:none!important}
+body.wide .layout{grid-template-columns:minmax(0,1fr)!important}
+body.wide #btnPv{display:none!important}
+.secempty{padding-block:28px}
+.dc.bad{background:var(--bad-bg);color:var(--bad)}
+/* entrada */
+.login-card{max-width:400px;padding:26px 24px;gap:14px;box-shadow:0 10px 30px rgba(0,0,0,.07)}
+.lg-head h1{margin:2px 0 0}
+.lgform{display:flex;flex-direction:column;gap:12px}
+.lgform[hidden],.lg-wait[hidden]{display:none!important}
+.lg-wait{display:flex;align-items:center;gap:10px;margin:8px 0;color:var(--muted)}
+.spin{width:16px;height:16px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;flex:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+@media (prefers-reduced-motion:reduce){.spin{animation:none}}
+.lg-reg{display:flex;align-items:center;justify-content:space-between;gap:10px;border-top:1px solid var(--line);padding-top:12px;margin-top:2px}
+.lg-sub{margin:0;font:700 17px var(--display);font-stretch:108%}
+.lg-note{margin:-6px 0 0;font-size:13px}
+.lg-want{border:1px solid var(--line);border-radius:6px;padding:8px 10px;display:flex;gap:20px;margin:0}
+.lg-want legend{font-size:12px;font-weight:600;color:var(--muted);padding:0 4px}
+.lg-ok{margin:0;color:var(--accent);font-weight:600}
+.lg-back{width:100%}
+/* usuarios */
+.urow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:11px 0;border-top:1px solid var(--line)}
+.card>h2+.urow,.card>.urow:first-of-type{border-top:0}
+.uinfo{display:flex;flex-direction:column;gap:3px;flex:1 1 240px;min-width:0}
+.uinfo .chip{align-self:flex-start}
+.uinfo b{font-size:14.5px}
+.uinfo .muted{font-size:12.5px;overflow-wrap:anywhere}
+.urow.off .uinfo b{color:var(--muted)}
+.urow.pend{background:color-mix(in srgb,var(--warn-bg) 40%,transparent);border-radius:8px;padding:11px 10px;border-top:0;margin-top:6px}
+.uperm{flex:2 1 380px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr))}
+.chk.dis{opacity:.5;cursor:default}
+.upw{width:190px}
+/* banco */
+.bktools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin:14px 0 12px}
+.bktools .seg{margin:0}
+.bktools .f{flex:1 1 260px;max-width:440px}
+.bxgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,440px),1fr));gap:14px;align-items:start}
+.bx{border:1.5px solid var(--line);border-radius:10px;background:var(--surface);padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0;transition:border-color .15s,box-shadow .15s}
+.bx.over{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}
+.bxh{display:flex;gap:8px;align-items:flex-start;justify-content:space-between}
+.bxn{display:flex;flex-direction:column;gap:2px;min-width:0}
+.bxn b{font:700 15.5px var(--display);font-stretch:108%;overflow-wrap:anywhere}
+.bxn .muted{font-size:12.5px}
+.bxst{display:flex;gap:4px;flex-wrap:wrap;justify-content:flex-end}
+.bxl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.bxd{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center}
+.bxth{all:unset;box-sizing:border-box;cursor:zoom-in;width:44px;height:56px;border:1px solid var(--line);border-radius:4px;background:#fff center top/cover no-repeat;display:grid;place-items:center;font:600 9.5px var(--mono);color:#7a857e;flex:none}
+.bxth:hover,.bxth:focus-visible{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.bxdi{display:flex;flex-direction:column;gap:1px;min-width:0}
+.bxdt{font-weight:600;font-size:13.5px;overflow-wrap:anywhere}
+.bxfn{font-size:12px;overflow-wrap:anywhere}
+.bxda{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.bxreps{margin:0;font-size:12.5px}
+.bxdrop{border:2px dashed var(--line);border-radius:8px;padding:12px;text-align:center;display:flex;flex-direction:column;gap:2px;cursor:pointer;background:var(--sunk);font-size:13px}
+.bxdrop:hover,.bxdrop:focus-visible,.bx.over .bxdrop{border-color:var(--accent);background:var(--accent-soft);outline:none}
+.bxdrop .muted{font-size:12px}
+.bxbak summary{cursor:pointer;font-weight:600;font-size:13px;color:var(--muted)}
+.bxbak .bxl{margin-top:8px}
+.bxp{border:1.5px solid var(--accent);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:8px;background:color-mix(in srgb,var(--accent-soft) 45%,var(--surface))}
+.bxp.ask{border-color:var(--r-alto);background:color-mix(in srgb,var(--warn-bg) 55%,var(--surface))}
+.bxpn{display:flex;gap:10px;align-items:center}
+.bxpq{margin:0;font-size:13.5px}
+.bxsafe{margin:0;font-size:12.5px}
+.bxrep{display:flex;gap:10px;align-items:center;font-size:13px}
+.bxch{display:flex;flex-direction:column;gap:6px}
+.bxc{display:flex;gap:10px;align-items:center;border:1.5px solid var(--line);border-radius:8px;padding:6px 8px;cursor:pointer;background:var(--surface)}
+.bxc.on{border-color:var(--accent);background:var(--accent-soft)}
+.bxc input[type=radio]{accent-color:var(--accent);margin:0;flex:none}
+.bxct{display:flex;flex-direction:column;gap:4px;min-width:0;font-size:13px}
+.bxct .chip{align-self:flex-start}
+.bxc.new select{max-width:100%}
+.bxdates{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:flex-end}
+.bxdates .f{width:160px}
+.bxdates>.muted{font-size:12px;flex:1 1 180px}
+/* visor con zoom */
+.zv{position:fixed;inset:0;z-index:50;background:rgba(14,20,17,.95);display:flex;flex-direction:column;color:#e9efe9}
+.zv[hidden]{display:none!important}
+body.zvon{overflow:hidden}
+.zvbar{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:calc(10px + env(safe-area-inset-top,0px)) 14px 10px;background:#0b100d;border-bottom:1px solid #2b3530}
+.zvt{flex:1 1 220px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+.zvpgs,.zvz,.zvr{display:flex;gap:6px;align-items:center;font:600 12.5px var(--mono)}
+.zvpgs[hidden]{display:none!important}
+.zv .btn{background:#1b2420;color:#e9efe9;border-color:#3a4640}
+.zv .btn:hover{border-color:#e9efe9}
+.zv .btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.zvbody{flex:1;min-height:0;overflow:auto;position:relative;display:flex;padding:12px;touch-action:none;cursor:grab}
+.zvbody.grab{cursor:grabbing}
+.zvbody canvas{background:#fff;box-shadow:0 4px 30px rgba(0,0,0,.5);display:block;max-width:none;margin:auto;flex:none}
+.zvmsg{position:absolute;left:0;right:0;top:45%;text-align:center;margin:0;color:#cfd8d2}
+.zvmsg[hidden]{display:none}
+.zvhint{margin:0;padding:6px 14px calc(8px + env(safe-area-inset-bottom,0px));font-size:12px;color:#9fb0a6;text-align:center}
+.ozimg{all:unset;cursor:zoom-in;position:relative;display:block}
+.ozimg img{display:block}
+.ozb{position:absolute;right:8px;bottom:8px;background:rgba(0,0,0,.72);color:#fff;font:600 12px var(--body);padding:5px 9px;border-radius:5px}
+/* ventana */
+.mdl{position:fixed;inset:0;z-index:40;background:rgba(10,15,12,.5);display:grid;place-items:center;padding:16px}
+.mdl[hidden]{display:none!important}
+.mdlc{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--accent);border-radius:10px;padding:18px 20px;width:min(100%,460px)}
+.mdlc h2{font-size:20px;margin-bottom:10px}
+/* fecha y verificación */
+.fechack{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:center}
+.fechack.off .chk span{color:var(--muted)}
+.ochk{border:1px solid var(--line);border-radius:8px;padding:10px 12px;margin:0 0 12px}
+.ochkl{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:4px 14px}
+.ochkl li{display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:6px;align-items:baseline;font-size:13px}
+.ochkl .ic{font-weight:800;text-align:center}
+.ochkl .ok .ic{color:var(--accent)}
+.ochkl .falta .ic,.ochkl .falta b,.ochkl .vencido .ic,.ochkl .vencido b{color:var(--bad)}
+.ochkl .revisar .ic,.ochkl .revisar b{color:var(--warn-ink)}
+.od.miss .dn{color:var(--bad)}
+.chip.own{background:var(--data-soft);color:var(--data)}
+.apptabs{overflow-x:auto;scrollbar-width:none}
+.apptabs::-webkit-scrollbar{display:none}
+.apptab{white-space:nowrap;flex:none}
+@media (max-width:760px){.secnav{order:3;width:100%;margin-right:0}.secnav .sec{flex:1;justify-content:center}.who{display:none}}
+@media (max-width:560px){.bxd{grid-template-columns:auto minmax(0,1fr)}.bxd .bxda{grid-column:1/-1;justify-content:flex-start}.zvhint{display:none}.zvt{flex-basis:100%}}
 </style>
 
 <meta name="darkreader-lock">
 <meta name="color-scheme" content="light dark">
 <header class="top">
-  <div><span class="eyebrow">By: Favio Arrese</span><h1>Generador ITSE</h1></div>
+  <div class="brand"><span class="eyebrow">By: Favio Arrese</span><h1>Generador ITSE</h1></div>
+  <nav class="secnav" id="secNav" aria-label="Secciones"><button type="button" class="sec" data-sec="itse">ITSE</button><button type="button" class="sec" data-sec="sunarp">SUNARP</button><button type="button" class="sec" data-sec="users" hidden>Usuarios <span class="cnt q" id="usrCnt" hidden></span></button></nav>
   <div class="acts">
     <button class="btn" id="btnNew" type="button">Nuevo</button>
     <button class="btn" id="btnLoad" type="button">Abrir datos</button>
     <button class="btn" id="btnSave" type="button">Guardar datos</button>
     <input type="file" id="fileLoad" accept=".json,.zip,application/json,application/zip" hidden>
-    <button class="btn" id="btnDrive" type="button" hidden>Drive</button>
+    <button class="btn sync" id="btnDrive" type="button" hidden>Guardado</button>
+    <span class="who" id="whoAmI" hidden></span>
+    <button class="btn" id="btnAccount" type="button" hidden>Mi cuenta</button>
     <button class="btn" id="btnLogout" type="button">Salir</button>
   </div>
 </header>
 <div class="login" id="login">
-  <form class="login-card" id="loginForm" autocomplete="off">
-    <span class="eyebrow">By: Favio Arrese</span>
-    <h1>Generador ITSE</h1>
-    <div class="f"><label for="lgUser">Usuario</label><input type="text" id="lgUser" autocomplete="username" autocapitalize="none" spellcheck="false"></div>
-    <div class="f"><label for="lgPass">Contraseña</label><input type="password" id="lgPass" autocomplete="current-password"></div>
-    <p class="lg-err" id="lgErr" role="alert"></p>
-    <button class="btn primary" type="submit">Ingresar</button>
-  </form>
+  <div class="login-card">
+    <div class="lg-head"><span class="eyebrow">Safety Through Design · By: Favio Arrese</span><h1>Generador ITSE</h1></div>
+    <p class="lg-wait" id="lgWait" role="status"><span class="spin" aria-hidden="true"></span>Cargando…</p>
+    <form id="loginForm" class="lgform" autocomplete="on" onsubmit="return false" hidden>
+      <div class="f"><label for="lgUser" id="lgUserL">Usuario</label><input type="text" id="lgUser" name="username" autocomplete="username" autocapitalize="none" spellcheck="false"></div>
+      <div class="f"><label for="lgPass">Contraseña</label><input type="password" id="lgPass" name="password" autocomplete="current-password"></div>
+      <p class="lg-err" id="lgErr" role="alert"></p>
+      <button class="btn primary" type="submit" id="lgGo">Ingresar</button>
+      <div class="lg-reg" id="lgReg" hidden><span class="muted">¿Primera vez?</span><button type="button" class="btn" data-lg="reg">Crear cuenta</button></div>
+    </form>
+    <form id="regForm" class="lgform" autocomplete="on" onsubmit="return false" hidden>
+      <p class="lg-sub">Crear cuenta</p>
+      <p class="muted lg-note">Tu solicitud le llega al administrador por correo. Podrás entrar cuando la apruebe.</p>
+      <div class="f"><label for="rgName">Nombre y apellido</label><input type="text" id="rgName" autocomplete="name"></div>
+      <div class="f"><label for="rgEmail">Correo</label><input type="email" id="rgEmail" autocomplete="email" autocapitalize="none" spellcheck="false"></div>
+      <div class="f"><label for="rgPass">Contraseña <span class="muted">(mínimo 6 caracteres)</span></label><input type="password" id="rgPass" autocomplete="new-password"></div>
+      <div class="f"><label for="rgPass2">Repite la contraseña</label><input type="password" id="rgPass2" autocomplete="new-password"></div>
+      <fieldset class="lg-want"><legend>Quiero acceder a</legend><label class="chk"><input type="checkbox" id="rgItse" checked><span>ITSE</span></label><label class="chk"><input type="checkbox" id="rgSunarp"><span>SUNARP</span></label></fieldset>
+      <p class="lg-err" id="rgErr" role="alert"></p>
+      <button class="btn primary" type="submit" id="rgGo">Pedir acceso</button>
+      <button type="button" class="btn lg-back" data-lg="login">Ya tengo cuenta: iniciar sesión</button>
+    </form>
+    <div id="regDone" class="lgform" hidden>
+      <p class="lg-sub">Solicitud enviada</p>
+      <p class="lg-ok" id="regDoneMsg" role="status"></p>
+      <button type="button" class="btn primary" data-lg="login">Volver a iniciar sesión</button>
+    </div>
+  </div>
 </div>
-<nav class="apptabs" id="appTabs" aria-label="Sistema"><button type="button" class="apptab" data-app="recent">Recientes</button><button type="button" class="apptab" data-app="itse">ITSE</button><button type="button" class="apptab" data-app="plan">Plan de seguridad</button><button type="button" class="apptab" data-app="memo">Memoria de extintores</button><button type="button" class="apptab" data-app="org">Organizar archivos</button></nav>
+<nav class="apptabs" id="appTabs" aria-label="Sistema"><button type="button" class="apptab" data-app="recent">Recientes</button><button type="button" class="apptab" data-app="itse">Anexos ITSE</button><button type="button" class="apptab" data-app="plan">Plan de seguridad</button><button type="button" class="apptab" data-app="memo">Memoria de extintores</button><button type="button" class="apptab" data-app="org">Organizar archivos</button><button type="button" class="apptab" data-app="bank" hidden>Banco de cocinas</button></nav>
 <div class="layout">
   <div class="formcol">
     <div class="banner" id="exBanner" hidden><span><b>Ejemplo:</b> empresa ficticia para que veas cómo funciona.</span><button class="btn" type="button" id="btnClearEx">Empezar en blanco</button></div>
@@ -453,6 +615,15 @@ b.mono{font-family:var(--mono);font-weight:600;font-size:12px;overflow-wrap:anyw
   <div class="acts"><button type="button" class="btn" id="btnPv">Vista previa</button><button type="button" class="btn primary" id="btnZip">Descargar todo (.zip)</button></div>
 </div></div>
 <input type="file" id="logoFile" accept="image/*" hidden>
+<div class="zv" id="zv" hidden role="dialog" aria-modal="true" aria-labelledby="zvTitle">
+  <div class="zvbar"><b id="zvTitle" class="zvt"></b>
+    <span class="zvpgs" id="zvPgs"><button type="button" class="btn sm" data-zv="prev" id="zvPrev" aria-label="Página anterior">‹</button><span id="zvPg">1 / 1</span><button type="button" class="btn sm" data-zv="next" id="zvNext" aria-label="Página siguiente">›</button></span>
+    <span class="zvz"><button type="button" class="btn sm" data-zv="out" aria-label="Alejar">−</button><span id="zvPct">100 %</span><button type="button" class="btn sm" data-zv="in" aria-label="Acercar">+</button><button type="button" class="btn sm" data-zv="fit">Ajustar</button><button type="button" class="btn sm" data-zv="100">100 %</button></span>
+    <span class="zvr"><button type="button" class="btn sm" data-zv="dl">Descargar</button><button type="button" class="btn sm primary" data-zv="close" id="zvClose">Cerrar</button></span></div>
+  <div class="zvbody" id="zvBody"><p class="zvmsg" id="zvMsg"></p><canvas id="zvCanvas" width="1" height="1"></canvas></div>
+  <p class="zvhint">Rueda con Ctrl (o pellizca) para acercar · arrastra para moverte · doble clic para 100 % · Esc para cerrar</p>
+</div>
+<div class="mdl" id="mdl" hidden><div class="mdlc" role="dialog" aria-modal="true" aria-labelledby="mdlT"><h2 id="mdlT"></h2><div id="mdlB"></div></div></div>
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script><script>
@@ -1830,11 +2001,11 @@ function example(){return Object.assign(blank(),{_example:true,funcion:"comercio
   n_pisos:"1",piso_ubic:"1° piso",area_ocupada:"110.00",aforo:"35",antig_edif:"15",antig_giro:"3",area_p1:"110.00",ext_pqs:"2",ext_co2:"1",plan:planExample()})}
 
 let S;
-const STORE="itse-generador-v3", LOGOSTORE="itse-logos-v1";
+let STORE="itse-generador-v3"; const LOGOSTORE="itse-logos-v1";
 try{const raw=localStorage.getItem(STORE)||localStorage.getItem("itse-generador-v2")||localStorage.getItem("itse-generador-v1"); if(raw) S=Object.assign(blank(),JSON.parse(raw))}catch(e){}
 if(!S) S=example();
 S.plan=planMigrate(S.plan);
-let APP="itse"; try{const a=localStorage.getItem("itse-app"); APP=a==="plan"||a==="memo"||a==="org"||a==="recent"?a:"itse"}catch(e){}
+let APP="itse"; try{const a=localStorage.getItem("itse-app"); APP=a==="plan"||a==="memo"||a==="org"||a==="recent"||a==="bank"?a:"itse"}catch(e){}
 if(!S.nivel&&MATRIX[S.subcat]) S.nivel=MATRIX[S.subcat][0];
 if(!S.logoAdj) S.logoAdj={};
 if(!S.ov||typeof S.ov!=="object") S.ov={}; if(!S.step) S.step="inicio";
@@ -1987,6 +2158,17 @@ const SPEC={
    R_("Representante","REP_NOMBRE",["rep_nombre"],"c8"),R_("Tipo de documento","REP_DOC_TIPO",["rep_doc_tipo"],"c4"),R_("N° de documento","REP_DOC",["rep_doc"],"c4"),R_("Partida electrónica","PARTIDA",["partida"],"c4"),R_("Zona registral","ZONA_REGISTRAL",["zona_registral"],"c4"),
    R_("Local (dirección y distrito)","EST_DIR_DIST",["@est"],"c8"),R_("Local (provincia y departamento)","EST_PROVDEP",["@est"],"c4"),R_("Ciudad","CIUDAD",["ciudad"],"c6"),R_("Fecha","FECHA_LARGA_DEL",["fecha"],"c6")]};
 const EST_F=["est_igual","est_dir","distrito","provincia","departamento"];
+/* fecha en los documentos: los anexos 0 al 4 salen sin fecha (se pone al firmar) salvo que se marque; la carta poder y las DJ, con fecha salvo que se quite */
+const FECHA_DOCS={a0:["fecha_corta"],a1:["fecha_corta"],a2:["fecha_corta"],a4:["fecha_corta"],carta_poder:["DIA","MES","ANIO"],dj_representacion:["FECHA_LARGA_U"],dj_capacitacion:["FECHA_LARGA_DEL"],dj_laminas:["FECHA_LARGA_DEL"]};
+const FECHA_DEF={a0:false,a1:false,a2:false,a4:false,carta_poder:true,dj_representacion:true,dj_capacitacion:true,dj_laminas:true};
+const FECHA_BLANK={fecha_corta:"",DIA:"______",MES:"______________",ANIO:"________",FECHA_LARGA_U:"______ DE ______________ DE ________",FECHA_LARGA_DEL:"______ de ______________ del ________"};
+const fechaOn=doc=>{const m=S.fechaDocs||{}; return Object.prototype.hasOwnProperty.call(m,doc)?!!m[doc]:!!FECHA_DEF[doc]};
+function fechaBlank(doc,V){if(doc&&FECHA_DOCS[doc]&&!fechaOn(doc)) for(const k of FECHA_DOCS[doc]) V[k]=FECHA_BLANK[k]; return V}
+const fechaIsA=doc=>/^a\d$/.test(doc);
+function fechaCk(doc){const on=fechaOn(doc); return `<div class="c12 fechack${on?"":" off"}"><label class="chk"><input type="checkbox" data-fecha="${doc}"${on?" checked":""}><span>Poner la fecha en ${fechaIsA(doc)?"este anexo":"este documento"}</span></label>${on?"":`<span class="muted">Sale sin fecha${isWord(doc)?", con espacios para escribirla a mano":""}.</span>`}</div>`}
+function fechaAllHTML(){const ids=Object.keys(FECHA_DOCS).filter(id=>docOn(id)); if(!ids.length) return "";
+  return `<div class="c12 sub"><span class="lbl">Fecha en los documentos</span><div class="checks">${ids.map(id=>{const d=DOCS.find(x=>x.id===id); return `<label class="chk"><input type="checkbox" data-fecha="${id}"${fechaOn(id)?" checked":""}><span><b>${esc(d.c)}</b> ${esc(d.name)}</span></label>`}).join("")}</div>
+    <p class="muted" style="margin:6px 0 0">Los anexos 0 al 4 salen sin fecha: se pone a mano al firmar. Marca los que quieras con la fecha de hoy o la que elijas en el primer anexo.</p></div>`}
 const expandF=fs=>fs.flatMap(f=>f==="@est"?EST_F:[f]);
 const INICIO_F=["tramite","funcion","nivel","subcat","municipalidad","logo"];
 // the step where a datum is typed: the first document (that goes in this procedure) printing it
@@ -2082,6 +2264,7 @@ function renderItse(){
       ${cands.length>1?F("subcat","Tipo","c4",{sel:cands.map(c=>[c,SHORT[c]||c])}):""}
       <div class="c12 result">${r?`<span class="pill" data-l="${r.res}">${r.res}</span> ITSE ${t}`:""} <span>Van: <b>${DOCS.filter(d=>docOn(d.id)&&d.id!=="plan"&&d.id!=="memo").map(d=>d.c).join(", ")||"—"}</b></span></div>
       <p class="c12 muted" style="margin:0">El Anexo 0 va solo en licencia nueva. El Anexo 4 va solo con riesgo bajo o medio (ITSE posterior). Los Anexos 1, 2 y 3 van siempre.</p>
+      ${fechaAllHTML()}
       ${F("municipalidad","Municipalidad","c8",{ph:"Municipalidad Distrital de …"})}
       <div class="f c4"><span class="lbl">Logo ${tagsFor("logo")}</span><div class="logo-row"><div class="logo-box">${S.logo?`<img src="${S.logo}" alt="Logo de la municipalidad">`:"Sin logo"}</div>
         <div class="acts"><button type="button" class="btn" id="btnLogo">${S.logo?"Cambiar":"Subir"}</button>${S.logo?`<button type="button" class="btn" id="btnLogoDel">Quitar</button>`:""}</div></div></div></div>`}
@@ -2091,8 +2274,9 @@ function renderItse(){
       <div class="finlist">${ds.map(d=>{const n=Object.keys(OV(d.id)).length; return `<div class="finrow"><label class="chk"><input type="checkbox" data-doc="${d.id}"${docOn(d.id)?" checked":""}><span><b>${d.c}</b> ${esc(d.name)}${n?` <span class="muted">· ${n} ${n===1?"línea editada":"líneas editadas"} solo ahí</span>`:""}</span></label>
         <span class="acts"><button type="button" class="btn" data-step="${d.id}">Revisar</button><button type="button" class="btn" data-dl="${d.id}">Descargar</button></span></div>`}).join("")}
       ${["plan","memo"].map(id=>{const d=DOCS.find(x=>x.id===id); return `<div class="finrow"><label class="chk"><input type="checkbox" data-doc="${id}"${docOn(id)?" checked":""}><span><b>${d.c}</b> ${esc(d.name)} <span class="muted">(se arma en su pestaña)</span></span></label><span class="acts"><button type="button" class="btn" data-app="${id}">Abrir</button></span></div>`}).join("")}</div>
+      <div class="grid" style="margin-top:12px">${fechaAllHTML()}</div>
       <div class="acts" style="margin-top:12px"><button type="button" class="btn primary" id="btnZip2">Descargar todo (.zip)</button></div>`}
-  else {const done=new Set(); h+=`<div class="grid">${SPEC[step].map(row=>rowHTML(step,row,done)).join("")}</div>`;
+  else {const done=new Set(); h+=`<div class="grid">${SPEC[step].map(row=>rowHTML(step,row,done)+(FECHA_DOCS[step]&&row.slot===FECHA_DOCS[step][0]?fechaCk(step):"")).join("")}</div>`;
     const n=Object.keys(OV(step)).length; if(n) h+=`<p class="muted" style="margin:10px 0 0">${n} ${n===1?"línea editada":"líneas editadas"} solo en este documento · <button type="button" class="btn" data-ovclear="${step}" style="padding:4px 8px">Volver todas al dato común</button></p>`}
   const i=ITSE_STEPS.indexOf(step), prev=ITSE_STEPS[i-1], next=ITSE_STEPS.slice(i+1).find(id=>!isDocStep(id)||docOn(id));
   h+=`<div class="stepnav">${prev?`<button type="button" class="btn" data-step="${prev}">← ${esc(stepName(prev))}</button>`:"<span></span>"}${next?`<button type="button" class="btn primary" data-step="${next}">Siguiente: ${esc(stepTitle(next))} →</button>`:""}</div></section>`;
@@ -2500,7 +2684,7 @@ function orgBankMsg(){const o=OR(), s=bkSede(o.cosede), w=bkOwn(o.coown), ns=s?O
   return ns||nw?bkDot(`Del banco: ${[ns?`${ns} certificado${ns===1?"":"s"} de ${s.nombre}`:"",nw?`${nw} documento${nw===1?"":"s"} de ${w.razon}`:""].filter(Boolean).join(" y ")}`):""}
 async function orgBankApply(msg){const ch=await orgBankSync(); if(APP==="org") render(); if(msg){const m=orgBankMsg(); say(m||"Sin documentos del banco.",m?"ok":"")} return ch}
 function orgBankHTML(){const B=bank(), o=OR();
-  if(!B) return `<span class="lbl">Banco de cocinas ocultas y dueños</span><p class="muted" style="margin:0">El banco (certificados de las sedes de cocinas ocultas y DNI, ficha RUC y vigencia de poder de los dueños) ${gdAvail()?(gdReady()?"aún no está en tu Drive: súbelo una vez desde la pestaña Recientes.":"está en tu Drive: conéctalo en la pestaña Recientes o con el botón «Conectar Drive»."):"va dentro del archivo «Generador ITSE.html» de tu PC."}</p>`;
+  if(!B) return `<span class="lbl">Banco de cocinas ocultas y dueños</span><p class="muted" style="margin:0">El banco (certificados de las sedes de cocinas ocultas y DNI, ficha RUC y vigencia de poder de los dueños) ${srvMode()?(canBank()?(GD.busy?"se está cargando…":"aún no está en el servidor"+(isAdmin()?": súbelo una vez desde la pestaña Recientes.":".")):"no está habilitado para tu cuenta (pídeselo al administrador)."):"va dentro del archivo «Generador ITSE.html» de tu PC."}</p>`;
   const s=bkSede(o.cosede), w=bkOwn(o.coown), today=new Date();
   const docLine=(d,files)=>{const f=files.find(x=>x.bank&&x.bank.id===d.id), v=bkValidity(d), sp=f&&bkSup().get(f.id), off=f&&f.f==="__x"||!!sp;
     return `<li${off?' class="off"':""}><span>${esc(bkCap(bkLbl(d)))}${d.rep&&d.f!=="ruc"?` · <span class="muted">${esc(d.rep.replace(/^CARNET DE EXTRANJERIA - /,"").replace(/\s*\(\d\)$/,""))}</span>`:""}</span>${v?`<span class="chip ${v.c}">${esc(v.t)}</span>`:""}${sp?`<span class="chip" title="${esc("Va tu archivo: "+sp.name)}">Se usa el tuyo</span>`:off?'<span class="chip">No se incluye</span>':""}</li>`};
@@ -2571,15 +2755,16 @@ function bkuHTML(){const B=bank(); if(!B) return `<span class="lbl">Banco de coc
       h+=`<label class="chk" style="display:inline-flex"><input type="checkbox" data-bku="newOwn"${U.newOwn?" checked":""}><span>Agregar como dueño nuevo</span></label>
         ${U.newOwn?`<div class="grid" style="margin-top:6px">${[["razon","Razón social","c12"],["ruc","RUC","c6"],["alias","Otro nombre (marca o cliente)","c6"]].map(([k,l,c])=>`<div class="f ${c}"><label>${l}</label><input type="text" data-bku="nw:${k}" value="${esc(d[k])}"></div>`).join("")}</div>`:`<p class="muted" style="margin:4px 0 0">Si no, elige el dueño en el paso 1.</p>`}`}
     h+=`<ul class="bkl">${P.own.olds.map(oldLi).join("")}${(P.w||U.newOwn)?P.own.news.map(newLi).join(""):""}</ul></div>`}
-  h+=`</div><p class="muted" style="margin:8px 0 0">Extintores, hermeticidad/GLP y capacitación no se guardan: son de cada cocina. ${GD.bankDrive?"Se guarda en tu Drive (Generador ITSE / Banco) y queda listo para la próxima cocina.":`Se arma un «Generador ITSE.html» nuevo con el banco al día${typeof window.showSaveFilePicker==="function"?"; guárdalo encima del que usas (por ejemplo en SYSTEM\\BASES)":"; reemplaza con él el que usas"} y vuelve a abrirlo.`}</p>
-    <div class="acts" style="margin-top:8px"><button type="button" class="btn primary" data-xact="bkusave">${GD.bankDrive?"Guardar en el banco de Drive":"Guardar Generador ITSE.html con el banco al día"}</button><button type="button" class="btn" data-xact="bkuclose">Cerrar</button></div>`;
+  h+=`</div><p class="muted" style="margin:8px 0 0">Extintores, hermeticidad/GLP y capacitación no se guardan: son de cada cocina. ${GD.bankDrive?"Se guarda en el banco del servidor y queda listo para la próxima cocina; lo que se reemplace queda como respaldo.":`Se arma un «Generador ITSE.html» nuevo con el banco al día${typeof window.showSaveFilePicker==="function"?"; guárdalo encima del que usas (por ejemplo en SYSTEM\\BASES)":"; reemplaza con él el que usas"} y vuelve a abrirlo.`}</p>
+    <div class="acts" style="margin-top:8px"><button type="button" class="btn primary" data-xact="bkusave">${GD.bankDrive?"Guardar en el banco":"Guardar Generador ITSE.html con el banco al día"}</button><button type="button" class="btn" data-xact="bkuclose">Cerrar</button></div>`;
   return h}
 const bkB64=file=>new Promise((ok,ko)=>{const r=new FileReader(); r.onload=()=>ok(String(r.result).split(",")[1]||""); r.onerror=()=>ko(r.error); r.readAsDataURL(file)});
 async function bkuBuild(drive){const P=bkuPlan(), B=P.B, U=P.U, o=OR(), meta=JSON.parse(JSON.stringify(B)), blobs=new Map(), files=new Map(); let nId=0, ch=0, sel=null;
   const uid=()=>"u"+Date.now().toString(36)+(nId++).toString(36);
   const mk=async x=>{const id=uid(), ext=(x.f.name.split(".").pop()||"").toLowerCase(); if(drive) files.set(id,x.f.file); else blobs.set(id,await bkB64(x.f.file));
     return {id,name:x.f.name,ext,f:x.f.f,t:x.t,em:bkIso(x.f.em),ve:bkIso(x.f.ve),src:"Generador ITSE"+(o.codigo?" · "+o.codigo:""),code:o.codigo||"",size:x.f.file.size,sha:x.f.h}};
-  const apply=async(cur,side)=>{const before=cur.docs.map(d=>d.id).join(), keep=new Set(side.olds.filter(x=>x.on).map(x=>x.d.id));
+  const apply=async(cur,side)=>{const before=cur.docs.map(d=>d.id).join(), keep=new Set(side.olds.filter(x=>x.on).map(x=>x.d.id)), gone=cur.docs.filter(d=>!keep.has(d.id));
+    if(gone.length) cur.bak=[...gone.map(d=>Object.assign({},d,{out:bkIso(new Date())})),...(cur.bak||[])].slice(0,60); // lo reemplazado queda como respaldo
     cur.docs=cur.docs.filter(d=>keep.has(d.id)); for(const x of side.news) if(x.on) cur.docs.push(await mk(x)); return before!==cur.docs.map(d=>d.id).join()};
   if(P.s) ch+=await apply(meta.sedes.find(x=>x.id===P.s.id),P.sede);
   else if(U.newSede&&P.sede.news.some(x=>x.on)){const d=U.ns||{}; if(!String(d.nombre||"").trim()||!String(d.distrito||"").trim()) throw new Error("falta el nombre o el distrito de la sede nueva");
@@ -2598,7 +2783,7 @@ function bkPage(meta,blobs){if(!BOOT) throw new Error("esta copia no se puede vo
   const attrs=el=>[...el.attributes].map(a=>` ${a.name}="${a.value.replace(/&/g,"&amp;").replace(/"/g,"&quot;")}"`).join("");
   const parts=[`<!doctype html>\n<html lang="${BOOT.lang}"><head>${BOOT.head}</head><body>`];
   const bankParts=()=>{parts.push('<script type="application/json" id="bk_meta">'+JSON.stringify(meta).replace(/<\//g,"<\\/")+"<\/script>");
-    for(const x of [...meta.sedes,...meta.owners]) for(const d of x.docs){const b=blobs.get(d.id)??(document.getElementById("bk_"+d.id)||{}).textContent; if(!b) throw new Error("falta "+d.name+" en el banco"); parts.push(`\n<script type="text/plain" id="bk_${d.id}">`,b.trim(),"<\/script>")}
+    for(const x of [...meta.sedes,...meta.owners]) for(const d of [...x.docs,...(x.bak||[])]){const b=blobs.get(d.id)??(document.getElementById("bk_"+d.id)||{}).textContent; if(!b) throw new Error("falta "+d.name+" en el banco"); parts.push(`\n<script type="text/plain" id="bk_${d.id}">`,b.trim(),"<\/script>")}
     parts.push("\n")};
   let skip=false; // whitespace between the old bank scripts is not carried over (bankParts writes its own)
   for(const n of BOOT.nodes){if(n.h!=null){if(!(skip&&!n.h.trim())) parts.push(n.h); continue}
@@ -2610,12 +2795,12 @@ async function bkSaveFile(blob){if(typeof window.showSaveFilePicker==="function"
     catch(e){if(e&&e.name==="AbortError") return "cancel"; console.warn(e)}}
   const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="Generador ITSE.html"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),120000); return "download"}
 async function bkuSaveDrive(){const btn=document.querySelector('[data-xact="bkusave"]'); if(btn) btn.disabled=true;
-  try{say("Guardando en el banco de tu Drive…"); const {meta,files,sel}=await bkuBuild(true);
+  try{say("Guardando en el banco…"); const {meta,files,sel}=await bkuBuild(true);
     for(const [id,file] of files){const s=meta.sedes.find(x=>x.docs.some(d=>d.id===id)), w=!s&&meta.owners.find(x=>x.docs.some(d=>d.id===id)), d=(s||w).docs.find(d=>d.id===id);
-      await gdBankPutDoc(s?"sede":"own",s?s.nombre:w.razon,d,file); GD.bcache.set(id,new File([file],d.name,{type:file.type}))}
-    await gdSaveBankMeta(meta); BANKM=meta; ORG.bku=null; const o=OR(); if(sel&&sel.s){o.cosede=sel.s; o.cosedeMan=true} if(sel&&sel.w){o.coown=sel.w; o.coownMan=true}
-    persist(); await orgBankSync(); render(); say(`Banco actualizado en tu Drive (${files.size} documento${files.size===1?"":"s"} nuevo${files.size===1?"":"s"}).`,"ok")}
-  catch(e){console.error(e); say("No se pudo guardar en el banco: "+(e&&e.message||e),"err")}
+      await gdBankPutDoc(s?"sede":"own",s?s.nombre:w.razon,d,file); GD.bcache.set(d.gid,new File([file],d.name,{type:file.type}))}
+    BANKM=await gdSaveBankMeta(meta); ORG.bku=null; const o=OR(); if(sel&&sel.s){o.cosede=sel.s; o.cosedeMan=true} if(sel&&sel.w){o.coown=sel.w; o.coownMan=true}
+    persist(); await orgBankSync(); render(); say(`Banco actualizado (${files.size} documento${files.size===1?"":"s"} nuevo${files.size===1?"":"s"}).`,"ok")}
+  catch(e){console.error(e); say("No se pudo guardar en el banco: "+(e&&e.message||e),"err"); if(e&&e.code==="conflict") gdLoadBank().catch(()=>{})}
   finally{const b=document.querySelector('[data-xact="bkusave"]'); if(b) b.disabled=false}}
 async function bkuSave(){if(GD.bankDrive) return bkuSaveDrive(); const btn=document.querySelector('[data-xact="bkusave"]'); if(btn) btn.disabled=true;
   try{say("Armando el Generador ITSE.html con el banco al día…"); const {meta,blobs,sel}=await bkuBuild(), page=bkPage(meta,blobs), r=await bkSaveFile(page);
@@ -2688,7 +2873,7 @@ function orgConsultaHTML(){const P=orgPending(); if(!P.length) return `<p class=
     return `<div class="ocq" id="ocq_${f.id}"><button type="button" class="big" data-oview="${f.id}"${f.thumb?` style="background-image:url(${f.thumb})"`:""} aria-label="Ver ${esc(f.name)} en grande">${f.thumb?"":esc((f.name.split(".").pop()||"").toUpperCase())}</button>
       <div class="qb"><div class="nm">${esc(f.name)}</div><div class="meta">${orgChips(f)}</div>
       <p class="muted snip">${f.unread?esc(f.note||"No se pudo leer el texto (escaneo borroso, foto o archivo sin texto)")+(f.f?". Se sugiere por el nombre del archivo.":". Míralo y elige la carpeta."):"«"+esc(snip)+(String(f.text||"").length>260?"…":"")+"»"}${f.why&&!f.unread?` <span class="why">(${esc(f.why)})</span>`:""}</p>
-      <div class="qrow"><div class="f">${orgFolderSelect(f)}</div><button type="button" class="btn primary" data-xact="ok" data-id="${f.id}"${f.f?"":" disabled"}>Confirmar</button><button type="button" class="btn" data-xact="open" data-id="${f.id}">Abrir</button><button type="button" class="btn" data-xact="x" data-id="${f.id}">No incluir</button></div></div></div>`}).join("")}
+      <div class="qrow"><div class="f">${orgFolderSelect(f)}</div><button type="button" class="btn primary" data-xact="ok" data-id="${f.id}"${f.f?"":" disabled"}>Confirmar</button><button type="button" class="btn" data-ozoom="${f.id}">Ver en grande</button><button type="button" class="btn" data-xact="x" data-id="${f.id}">No incluir</button></div></div></div>`}).join("")}
 function orgStepsUpd(){document.querySelectorAll(".ostep").forEach(b=>{const k=b.dataset.ostep; const n=k==="files"?ORG.files.length:k==="consulta"?orgPending().length:0; const s=b.querySelector(".cnt"); if(s) {s.textContent=n||""; s.hidden=!n}})}
 function renderOrg(){const o=OR(), st=ORG_STEPS.some(s=>s[0]===o.step)?o.step:"prop", N=orgNames(); orgBankEnsure();
   let h=`<nav class="steps" aria-label="Pasos">${ORG_STEPS.map(([id,l],i)=>`<button type="button" class="stepb ostep${id===st?" cur":""}" data-ostep="${id}" aria-current="${id===st?"step":"false"}">${i+1}. ${l} <span class="cnt${id==="consulta"?" q":""}" hidden></span></button>`).join("")}</nav>`;
@@ -2716,12 +2901,13 @@ function renderOrg(){const o=OR(), st=ORG_STEPS.some(s=>s[0]===o.step)?o.step:"p
       ${(()=>{const bk=ORG.files.filter(f=>f.bank&&f.f!=="__x"), s=bkSede(o.cosede), w=bkOwn(o.coown); if(!bk.length) return "";
         const ns=bk.filter(f=>f.bank.kind==="sede").length, nw=bk.length-ns;
         return `<p class="info" style="margin:10px 0 0">${esc(bkDot(`Ya están en la lista, copiados del banco: ${[ns&&s?`${ns} de ${s.nombre}`:"",nw&&w?`${nw} de ${w.razon}`:""].filter(Boolean).join(" y ")}`))} Suelta aquí solo lo propio de esta cocina o local${s?" (extintores, hermeticidad, capacitación…)":""}. <button type="button" class="btn" data-ostep="prop" style="padding:4px 8px">Cambiar</button></p>`})()}
-      <div id="orgProg">${orgProgHTML()}</div><div class="ofl" id="orgList">${orgListHTML()}</div>
+      <div id="orgProg">${orgProgHTML()}</div><div class="ofl" id="orgList">${orgListHTML()}</div><div id="orgMiss">${orgMissHTML()}</div>
       ${ORG.files.length?`<div class="acts" style="margin-top:10px"><button type="button" class="btn" data-xact="clearfiles">Quitar todos los archivos</button></div>`:""}`}
   else if(st==="consulta") h+=`<div id="orgCq">${orgConsultaHTML()}</div>`;
   else {const E=orgEntries(), G=orgGenList(), P=orgPending().length, busy=ORG.files.some(f=>f.st!=="listo");
     if(!o.codigo||!o.local) h+=`<p class="warn" style="margin:0 0 10px">Falta ${!o.codigo&&!o.local?"el código y el nombre del local":!o.codigo?"el código del proyecto":"el nombre del local"}: la carpeta saldrá como «${esc(N.proj)}». <button type="button" class="btn" data-ostep="prop" style="padding:4px 8px">Completar</button></p>`;
     h+=`<p style="margin:0 0 10px"><b>${orgFolderPaths().length}</b> carpetas · <b>${E.length}</b> archivos (${(()=>{const fb=E.filter(e=>e.kind==="file"), nb=fb.filter(e=>{const f=ORG.files.find(x=>x.id===e.id); return f&&f.bank}).length; return `${fb.length-nb} tuyos${nb?`, ${nb} del banco`:""}`})()}${ORG.prop?", la propuesta":""}${G.length?`, ${G.length} generados`:""})${P?` · <b class="bad">${P} sin revisar</b> <button type="button" class="btn" data-ostep="consulta" style="padding:4px 8px">Revisar</button>`:""}</p>
+      ${orgCheckHTML()}
       <div class="c12 sub"><span class="lbl">Nombres de los archivos</span><div class="seg" role="radiogroup" aria-label="Nombres de los archivos">
         ${[["ilegibles","Ordenar solo los ilegibles (WhatsApp, scan…)"],["todos","Ordenar todos"],["orig","Dejar los originales"]].map(([v,l])=>`<label class="segopt"><input type="radio" name="o_nombres" data-ok="nombres" value="${v}"${o.nombres===v?" checked":""}><span>${l}</span></label>`).join("")}</div></div>
       <div class="c12" style="margin-top:10px"><span class="lbl">Incluir lo hecho en las otras pestañas</span><div class="gens">${(()=>{const I=orgGenInfo();
@@ -2734,25 +2920,41 @@ function renderOrg(){const o=OR(), st=ORG_STEPS.some(s=>s[0]===o.step)?o.step:"p
   h+=`<div class="stepnav">${prev?`<button type="button" class="btn" data-ostep="${prev[0]}">← ${prev[1]}</button>`:"<span></span>"}${next?`<button type="button" class="btn primary" data-ostep="${next[0]}">Siguiente: ${next[1]} →</button>`:""}</div></section>
     <input type="file" id="orgPropIn" accept=".pdf,.xlsx,image/*" hidden><input type="file" id="orgFilesIn" multiple hidden><input type="file" id="orgDirIn" webkitdirectory multiple hidden>`;
   $("#form").innerHTML=h; $("#exBanner").hidden=true; orgStepsUpd(); bar(); schedulePreview(0)}
-function orgBar(){const P=orgPending().length, t=ORG.files.length; $("#btnZip").textContent="Descargar carpeta (.zip)";
-  $("#barRisk").innerHTML=`<b>Organizar archivos</b><span class="muted">· ${esc(OR().codigo||"sin código")} · ${t} ${t===1?"archivo":"archivos"}${P?` · <b class="bad">${P} por revisar</b>`:""}</span>`}
+function orgBar(){const P=orgPending().length, t=ORG.files.length, M=t?orgCheck().filter(r=>r.st==="falta").length:0; $("#btnZip").textContent="Descargar carpeta (.zip)";
+  $("#barRisk").innerHTML=`<b>Organizar archivos</b><span class="muted">· ${esc(OR().codigo||"sin código")} · ${t} ${t===1?"archivo":"archivos"}${P?` · <b class="bad">${P} por revisar</b>`:""}${M?` · ${M} carpeta${M===1?"":"s"} sin archivo`:""}</span>`}
+/* verificación: cada carpeta de documentos y certificados que pide este expediente, con o sin su archivo */
+const ONEED_G=new Set(["Documentos administrativos","Certificados y protocolos"]);
+function orgFileBad(f){if(f.f==="dni") return !!(f.ve&&f.ve<new Date()); const v=orgValidity(f); return !!(v&&v.c==="bad")}
+function orgCheck(){const A=orgActive(), SUP=bkSup(), out=[];
+  for(const [id,,label,group] of OFOLD){if(!A.has(id)||!ONEED_G.has(group)) continue;
+    const fs=ORG.files.filter(f=>f.st==="listo"&&f.f===id&&!SUP.has(f.id)), pend=fs.filter(f=>!f.ok).length, bad=fs.filter(orgFileBad).length;
+    out.push({id,label,group,n:fs.length,pend,bad,st:!fs.length?"falta":pend?"revisar":bad?"vencido":"ok"})}
+  return out}
+function orgCheckHTML(){const R=orgCheck(); if(!R.length) return ""; const by=k=>R.filter(r=>r.st===k), miss=by("falta"), venc=by("vencido"), rev=by("revisar"), ok=by("ok");
+  const ic={ok:"✓",falta:"✗",revisar:"?",vencido:"!"}, txt={falta:"Falta",revisar:"Por revisar",vencido:"Vencido"};
+  return `<div class="ochk"><span class="lbl">Verificación de carpetas <span class="muted">(${ok.length} de ${R.length} completas)</span></span>
+    ${miss.length||venc.length||rev.length?`<p class="${miss.length||venc.length?"warn":"info"}" style="margin:0 0 8px">${[miss.length?`${miss.length} sin archivo`:"",venc.length?`${venc.length} con un documento vencido`:"",rev.length?`${rev.length} por revisar`:""].filter(Boolean).join(" · ")}. Puedes descargar igual: las carpetas vacías se crean para completarlas después.</p>`:`<p class="ok-msg" style="margin:0 0 8px">Todas las carpetas de documentos y certificados tienen su archivo. ✓</p>`}
+    <ul class="ochkl">${R.map(r=>`<li class="${r.st}"><span class="ic" aria-hidden="true">${ic[r.st]}</span><span class="ochkn">${esc(r.label)}</span><span class="muted">${r.n?`${r.n} archivo${r.n===1?"":"s"}`:""}${txt[r.st]?` <b>${txt[r.st]}</b>`:""}</span></li>`).join("")}</ul>
+    ${miss.length?`<div class="acts" style="margin-top:8px"><button type="button" class="btn" data-ostep="files">Agregar los que faltan</button></div>`:""}</div>`}
+function orgMissHTML(){if(!ORG.files.length||ORG.files.some(f=>f.st!=="listo")) return ""; const M=orgCheck().filter(r=>r.st==="falta"); if(!M.length) return `<p class="ok-msg" style="margin:10px 0 0">Están todas las carpetas de documentos y certificados. ✓</p>`;
+  return `<p class="warn" style="margin:10px 0 0"><b>Aún falta${M.length===1?"":"n"}:</b> ${M.map(r=>esc(r.label)).join(", ")}.</p>`}
 
 /* ---------- preview: the folder tree, or one file in large ---------- */
-function orgTreeHTML(){const paths=orgFolderPaths(), E=orgEntries(), root={c:{},files:[]}, A=orgActive();
+function orgTreeHTML(){const paths=orgFolderPaths(), E=orgEntries(), root={c:{},files:[]}, A=orgActive(), MISS=new Set(ORG.files.length?orgCheck().filter(r=>r.st==="falta").map(r=>orgFull(r.id)):[]);
   const node=p=>{let n=root; for(const s of p.split("/")){n.c[s]=n.c[s]||{c:{},files:[]}; n=n.c[s]} return n};
   paths.forEach(node); for(const e of E) node(e.dir).files.push(e);
   const cnt=n=>n.files.length+Object.values(n.c).reduce((a,x)=>a+cnt(x),0);
-  const rec=(n,depth)=>Object.entries(n.c).map(([name,ch])=>{const k=cnt(ch);
-    return `<li><div class="od${k?"":" empty"}" style="--d:${depth}"><span class="ic" aria-hidden="true"></span><span class="dn">${esc(name)}</span>${k?`<span class="dc">${k}</span>`:""}</div>
-      ${Object.keys(ch.c).length||ch.files.length?`<ul>${rec(ch,depth+1)}${ch.files.map(e=>{const f=e.id&&ORG.files.find(x=>x.id===e.id);
+  const rec=(n,depth,pre)=>Object.entries(n.c).map(([name,ch])=>{const k=cnt(ch), pth=pre?pre+"/"+name:name, miss=!k&&MISS.has(pth);
+    return `<li><div class="od${k?"":" empty"}${miss?" miss":""}" style="--d:${depth}"><span class="ic" aria-hidden="true"></span><span class="dn">${esc(name)}</span>${k?`<span class="dc">${k}</span>`:miss?`<span class="dc bad">falta</span>`:""}</div>
+      ${Object.keys(ch.c).length||ch.files.length?`<ul>${rec(ch,depth+1,pth)}${ch.files.map(e=>{const f=e.id&&ORG.files.find(x=>x.id===e.id);
         return `<li><div class="of ${e.kind}${f&&!f.ok?" pend":""}" style="--d:${depth+1}">${f?`<button type="button" class="ofn" data-oview="${f.id}">${esc(e.name)}</button>`:`<span class="ofn">${esc(e.name)}</span>`}${e.kind==="gen"?'<span class="dc gen">se genera</span>':e.kind==="prop"?'<span class="dc">propuesta</span>':f&&f.bank?'<span class="dc bk">banco</span>':f&&!f.ok?'<span class="dc warn">revisar</span>':""}</div></li>`}).join("")}</ul>`:""}</li>`}).join("");
   const loose=ORG.files.filter(f=>f.st==="listo"&&!f.f);
-  return `<div class="otree"><ul>${rec(root,0)}</ul>${loose.length?`<p class="warn" style="margin:10px 0 0">${loose.length} sin carpeta todavía (están en Consulta).</p>`:""}</div>`}
+  return `<div class="otree"><ul>${rec(root,0,"")}</ul>${loose.length?`<p class="warn" style="margin:10px 0 0">${loose.length} sin carpeta todavía (están en Consulta).</p>`:""}</div>`}
 async function orgViewHTML(f){let img=f.thumb||"";
   try{if(/\.pdf$/i.test(f.name)){const lib=await oPdf(), pdf=await lib.getDocument({data:new Uint8Array(await f.file.arrayBuffer()),isEvalSupported:false}).promise; img=(await oRenderPage(await pdf.getPage(1),900)).toDataURL("image/jpeg",.85)}
     else if(/\.(jpe?g|png|webp|gif|bmp|jfif)$/i.test(f.name)) img=(await oImgCanvas(f.file,1400)).toDataURL("image/jpeg",.85)}catch(_){}
-  return `<div class="oview"><div class="acts" style="margin-bottom:8px"><button type="button" class="btn" data-xact="back">← Estructura de carpetas</button><button type="button" class="btn" data-xact="open" data-id="${f.id}">Abrir el archivo</button></div>
-    <p class="nm">${esc(f.name)}${f.pages>1?` <span class="muted">(${f.pages} páginas; se ve la 1)</span>`:""}</p>${img?`<img src="${img}" alt="Primera página de ${esc(f.name)}">`:`<p class="muted">No hay vista para este tipo de archivo. Usa «Abrir el archivo».</p>`}
+  return `<div class="oview"><div class="acts" style="margin-bottom:8px"><button type="button" class="btn" data-xact="back">← Estructura de carpetas</button><button type="button" class="btn" data-ozoom="${f.id}">Ver en grande (zoom)</button><button type="button" class="btn" data-xact="open" data-id="${f.id}">Abrir el archivo</button></div>
+    <p class="nm">${esc(f.name)}${f.pages>1?` <span class="muted">(${f.pages} páginas; aquí se ve la 1)</span>`:""}</p>${img?`<button type="button" class="ozimg" data-ozoom="${f.id}" title="Ver en grande, con zoom y todas las páginas"><img src="${img}" alt="Primera página de ${esc(f.name)}"><span class="ozb">Ver en grande</span></button>`:`<p class="muted">No hay vista para este tipo de archivo. Usa «Abrir el archivo».</p>`}
     ${f.text?`<details><summary>Texto leído${f.ocr?" (OCR)":""}</summary><pre>${esc(String(f.text).slice(0,6000))}</pre></details>`:""}</div>`}
 let oViewTok=0;
 function drawOrg(body){$("#pvTabs").innerHTML=`<button type="button" class="pv-tab" role="tab" aria-selected="true">${ORG.view?"Archivo":"Estructura de carpetas"}</button>`; $("#logoTools").hidden=true;
@@ -2826,18 +3028,21 @@ function orgClick(e){const t=e.target;
   }
   return true}
 
-document.addEventListener("click",e=>{if(APP!=="org") return; if(e.target.closest("#btnZip")){e.stopImmediatePropagation(); orgZip(); return} if(orgClick(e)) e.stopImmediatePropagation()},true);
+document.addEventListener("click",e=>{if(APP!=="org") return; const z=e.target.closest("[data-ozoom]"); if(z){e.preventDefault(); e.stopImmediatePropagation(); const f=ORG.files.find(x=>x.id===z.dataset.ozoom); if(f) zvOpen(f.file,f.name); return}
+  if(e.target.closest("#btnZip")){e.stopImmediatePropagation(); orgZip(); return} if(orgClick(e)) e.stopImmediatePropagation()},true);
 
-function render(){
+function render(){secUi();
+  if(SEC!=="itse") return renderSec();
   document.querySelectorAll(".apptab").forEach(b=>b.setAttribute("aria-selected",b.dataset.app===APP));
-  if(APP==="plan") return renderPlan();
-  if(APP==="memo") return renderMemo();
-  const rc=APP==="recent"; $("#btnZip").hidden=rc; $("#btnPv").hidden=rc;
+  if(APP==="plan"){$("#btnZip").hidden=false; $("#btnPv").hidden=false; return renderPlan()}
+  if(APP==="memo"){$("#btnZip").hidden=false; $("#btnPv").hidden=false; return renderMemo()}
+  const rc=APP==="recent"||APP==="bank"; $("#btnZip").hidden=rc; $("#btnPv").hidden=rc;
+  if(APP==="bank") return renderBank();
   if(APP==="recent") return renderRecent();
   if(APP==="org") return renderOrg();
   return renderItse();
 }
-function bar(){if(APP==="recent") return recentBar(); if(APP==="plan") return planBar(); if(APP==="memo") return memoBar(); if(APP==="org") return orgBar(); $("#btnZip").textContent="Descargar todo (.zip)"; const r=risk(), t=tipo(), nd=DOCS.filter(d=>docOn(d.id)).length;
+function bar(){if(SEC!=="itse") return secBar(); if(APP==="bank") return bankBar(); if(APP==="recent") return recentBar(); if(APP==="plan") return planBar(); if(APP==="memo") return memoBar(); if(APP==="org") return orgBar(); $("#btnZip").textContent="Descargar todo (.zip)"; const r=risk(), t=tipo(), nd=DOCS.filter(d=>docOn(d.id)).length;
   $("#barRisk").innerHTML=r?`<span class="pill" data-l="${r.res}">${r.res}</span><b>ITSE ${t}</b><span class="muted">· ${nd} documentos</span>`:`<span class="muted">Sin clasificar · ${nd} documentos</span>`}
 
 /* ---------- shared text layout (used by the PDF and by the preview) ---------- */
@@ -2874,7 +3079,7 @@ function values(doc){
   if(S.modalidad==="cambio") V.det_cambio_nombre=U(S.nombre_comercial);
   const p1=a4AutoP1(); if(p1){V.area_p1=p1; V.area_techada=p1} // one floor: the occupied area is also the 1st floor and the total roofed area
   if(doc&&S.ov&&S.ov[doc]) Object.assign(V,S.ov[doc]);
-  return V;
+  return fechaBlank(doc,V);
 }
 function marks(doc){
   const r=risk(), M=new Set(), lv={"BAJO":"bajo","MEDIO":"medio","ALTO":"alto","MUY ALTO":"muyalto"}, cond="cond_"+S.condicion;
@@ -2885,7 +3090,7 @@ function marks(doc){
   return M;
 }
 const cleanTxt=s=>String(s??"").replace(/[–—]/g,"-").replace(/[“”]/g,'"').replace(/[‘’]/g,"'").replace(/\s+/g," ").trim();
-function wordVals(doc){const W=wordVals0(); if(doc&&S.ov&&S.ov[doc]) Object.assign(W,S.ov[doc]); return W}
+function wordVals(doc){const W=wordVals0(); if(doc&&S.ov&&S.ov[doc]) Object.assign(W,S.ov[doc]); return fechaBlank(doc,W)}
 function wordVals0(){
   const p=fparts(S.fecha)||{d:"",m:1,y:""}, ea=estAddr(), U=s=>String(s||"").toLocaleUpperCase("es-PE"), tp=S.rep_doc_tipo==="CE"?"CE":"DNI", Fm=S.rep_genero==="F";
   return {RAZON_SOCIAL:S.razon_social,RAZON_SOCIAL_U:U(S.razon_social),RUC:S.ruc,PARTIDA:S.partida,ZONA_REGISTRAL:S.zona_registral,
@@ -2905,6 +3110,7 @@ function getLogoImg(){if(!S.logo){logoImg=null;logoSrc="";return null} if(logoSr
 function schedulePreview(ms=200){clearTimeout(pvTimer); pvTimer=setTimeout(drawPreview,ms)}
 function renderTabs(){$("#pvTabs").innerHTML=DOCS.map(d=>`<button type="button" class="pv-tab${docOn(d.id)?"":" off"}" role="tab" aria-selected="${d.id===pvDoc}" data-pv="${d.id}" title="${esc(d.name)}">${d.c}</button>`).join("")}
 function drawPreview(){
+  if(SEC!=="itse"||APP==="bank") return;
   if(APP==="recent") return drawRecent($("#pvBody"));
   if(APP==="org") return drawOrg($("#pvBody"));
   if(APP==="memo"||(APP==="itse"&&pvDoc==="memo")) return drawMemo($("#pvBody"));
@@ -3024,6 +3230,7 @@ document.addEventListener("change",e=>{const el=e.target;
     persist(); render(); const n=document.querySelector(`[data-mx="${el.dataset.mx}"]`); if(n) n.focus({preventScroll:true}); return}
   if("mx3same" in el.dataset){S.mx3=el.checked?null:Object.assign({},mxA2X()); persist(); render(); return}
   if(el.dataset.a4){const k=el.dataset.a4; if(el.value===a4Default(k)) delete S.a4man[k]; else S.a4man[k]=el.value; persist(); render(); return}
+  if(el.dataset.fecha){S.fechaDocs=Object.assign({},S.fechaDocs||{},{[el.dataset.fecha]:el.checked}); persist(); pvDoc=el.dataset.fecha; render(); return}
   if(el.dataset.doc){S.docs[el.dataset.doc]=el.checked; persist(); if(APP==="itse") render(); else {bar(); renderTabs()} return}
 });
 let orgDrag=null;
@@ -3056,7 +3263,7 @@ document.addEventListener("click",e=>{
   if(b.dataset.msec){e.preventDefault(); MST.act=b.dataset.mfield; MST.goto=b.dataset.msec; if(window.innerWidth<1180) $("#pv").classList.add("open"); schedulePreview(0); return}
   if(b.id==="btnMemoDoc"||(b.id==="btnZip"&&APP==="memo")) return generateMemo();
   if(b.dataset.psec){e.preventDefault(); planAct=b.dataset.pfield; planGoto=b.dataset.psec; if(window.innerWidth<1180) $("#pv").classList.add("open"); schedulePreview(0); return}
-  if(b.dataset.app){APP=b.dataset.app; try{localStorage.setItem("itse-app",APP)}catch(_){} render(); window.scrollTo(0,0); return}
+  if(b.dataset.app){APP=b.dataset.app; SEC="itse"; try{localStorage.setItem("itse-app",APP); localStorage.setItem("itse-sec",SEC)}catch(_){} render(); window.scrollTo(0,0); return}
   if(b.dataset.pact) return planAction(b);
   if(b.id==="btnPlanDoc"||(b.id==="btnZip"&&APP==="plan")) return generatePlan();
   if(b.dataset.pv&&APP==="itse"&&b.classList.contains("pv-tab")){e.preventDefault(); const id=b.dataset.pv; // a document tab of the preview also opens that document's step in the form
@@ -3077,8 +3284,8 @@ document.addEventListener("click",e=>{
   }});
 $("#fileLoad").addEventListener("change",async e=>{const f=e.target.files[0]; if(!f) return;
   e.target.value=""; try{await gdFlush(); const st=await stateFromFile(f); loadState(st); persistLocal(); render();
-    if(gdReady()&&GD.ids.exp&&expHasData(S)){say("Datos cargados; subiendo a tu Drive…"); await gdPut(S); GD.lastSave=Date.now(); gdUi(); say("Datos cargados y guardados en tu Drive.","ok")}
-    else {if(gdAvail()&&expHasData(S)) gdQueue(S); say("Datos cargados."+(gdAvail()&&expHasData(S)?" Se suben a tu Drive al conectarlo.":""),"ok")}}
+    if(gdReady()&&expHasData(S)){say("Datos cargados; guardándolos en línea…"); await gdPut(S); GD.lastSave=Date.now(); gdUi(); say("Datos cargados y guardados en línea.","ok")}
+    else say("Datos cargados.","ok")}
   catch(err){say(err&&err.message||"Ese archivo no es un .json de este generador.","err")}});
 $("#logoFile").addEventListener("change",async e=>{const f=e.target.files[0]; if(!f) return;
   try{const url=URL.createObjectURL(f); S.logo=await prepLogo(url); S.logoAdj={}; URL.revokeObjectURL(url); const k=muniKey(S.municipalidad); if(k){LOGOS[k]=S.logo; persistLogos()} persist(); pvDoc="a1"; render()}catch(err){say("No se pudo leer la imagen. Usa PNG o JPG.","err")} e.target.value=""});
@@ -3151,211 +3358,456 @@ async function generate(){
   }catch(err){ if(err&&err.code==="declined") say("Descarga cancelada."); else {console.error(err); say("Error: "+(err&&err.message||err),"err")} }
 }
 
-/* ---------- Google Drive: cada expediente se guarda solo en el Drive del usuario (carpeta «Generador ITSE») ----------
-   Solo en la plataforma publicada (github.io). Permiso drive.file: la app ve únicamente lo que ella misma crea en tu Drive.
-   Generador ITSE / Expedientes / <CÓDIGO - LOCAL - CLIENTE> / Datos del expediente.json (+ lo que se descarga)
-   Generador ITSE / Banco / banco.json + Sedes/… + Dueños/…  (certificados de cocinas ocultas, DNI, vigencias, fichas RUC) */
-const GD={cid:"980611505502-b0ar15r3liicosjpol22o3rlr9otuc21.apps.googleusercontent.com",scope:"https://www.googleapis.com/auth/drive.file",
-  tok:null,exp:0,email:"",st:"off",ids:{},list:null,saving:false,dirty:false,lastSave:0,err:"",map:{},bankDrive:false,bankMetaId:null,bcache:new Map(),busy:"",q:""};
-const GAPI="https://www.googleapis.com/drive/v3", GUP="https://www.googleapis.com/upload/drive/v3", GFOLDER="application/vnd.google-apps.folder", GD_KEY="itse-drive";
-const gdAvail=()=>(location.protocol==="https:"&&/\.github\.io$/i.test(location.hostname))||/^(localhost|127\.0\.0\.1)$/.test(location.hostname);
-function gdPref(upd){let p={}; try{p=JSON.parse(localStorage.getItem(GD_KEY)||"{}")}catch(_){} if(upd){Object.assign(p,upd); try{localStorage.setItem(GD_KEY,JSON.stringify(p))}catch(_){}} return p}
-const gdReady=()=>!!GD.tok&&Date.now()<GD.exp;
-const gdQ=s=>String(s).replace(/\\/g,"\\\\").replace(/'/g,"\\'");
-let gdLoadP=null;
-function gdLoad(){return gdLoadP||(gdLoadP=new Promise((ok,ko)=>{if(window.google&&google.accounts&&google.accounts.oauth2) return ok();
-  const s=document.createElement("script"); s.src="https://accounts.google.com/gsi/client"; s.async=true; s.onload=()=>ok(); s.onerror=()=>{gdLoadP=null; ko(new Error("No cargó el inicio de sesión de Google (¿sin internet?)."))}; document.head.appendChild(s)}))}
-let gdTC=null;
-// must run inside a click (Google opens a small window); returns when the token arrives
-function gdConnect(){return new Promise((ok,ko)=>{
-  if(!gdAvail()) return ko(new Error("Drive funciona en la plataforma web."));
-  if(!(window.google&&google.accounts&&google.accounts.oauth2)){gdLoad().then(()=>{GD.err="Listo: toca otra vez «Conectar Drive»."; gdUi()}).catch(e=>{GD.err=e.message; gdUi()}); return ko(new Error("Cargando Google… toca otra vez «Conectar Drive»."))}
-  if(!gdTC) gdTC=google.accounts.oauth2.initTokenClient({client_id:GD.cid,scope:GD.scope,callback:()=>{}});
-  gdTC.callback=r=>{if(!r||r.error){GD.st=GD.tok?"exp":"off"; gdUi(); return ko(new Error(r&&(r.error_description||r.error)||"Google no dio permiso."))}
-    GD.tok=r.access_token; GD.exp=Date.now()+(Number(r.expires_in||3600)-120)*1000; GD.st="on"; GD.err=""; gdPref({on:true}); gdUi(); ok()};
-  gdTC.error_callback=e=>{GD.st=GD.tok?"exp":"off"; gdUi(); ko(new Error(e&&e.type==="popup_failed_to_open"?"El navegador bloqueó la ventana de Google: permite ventanas emergentes para esta página.":e&&e.type==="popup_closed"?"Se cerró la ventana de Google.":"No se pudo conectar con Google."))};
-  GD.st="conn"; gdUi(); const p=gdPref(); gdTC.requestAccessToken({prompt:p.on?"":"consent",login_hint:GD.email||p.email||undefined})})}
-async function gdStart(){try{await gdConnect()}catch(e){GD.err=e.message; gdUi(); say(e.message,"err"); return false}
-  try{GD.busy="Preparando tu Drive…"; gdUi(); await gdInit(); GD.busy=""; gdUi(); say(`Drive conectado${GD.email?" ("+GD.email+")":""}.`,"ok"); return true}
-  catch(e){GD.busy=""; GD.err=e.message; gdUi(); say("Drive: "+e.message,"err"); return false}}
-async function gdFetch(url,opt={}){if(!gdReady()){if(GD.tok) GD.st="exp"; gdUi(); throw new Error("Conecta Drive (la sesión de Google dura una hora).")}
-  const r=await fetch(url,{...opt,headers:{...(opt.headers||{}),Authorization:"Bearer "+GD.tok}});
-  if(r.status===401){GD.tok=null; GD.st="exp"; gdUi(); throw new Error("La sesión de Google venció: toca «Reconectar Drive».")}
-  if(!r.ok){let t=""; try{t=(await r.text()).slice(0,300)}catch(_){} throw new Error(`Drive respondió ${r.status}${t?": "+t:""}`)} return r}
-async function gdList(q,fields="files(id,name,mimeType,modifiedTime,appProperties,size)",order){const out=[]; let pt="";
-  do{const u=`${GAPI}/files?q=${encodeURIComponent(q)}&fields=nextPageToken,${encodeURIComponent(fields)}&pageSize=1000&spaces=drive${order?"&orderBy="+encodeURIComponent(order):""}${pt?"&pageToken="+pt:""}`;
-    const j=await (await gdFetch(u)).json(); out.push(...(j.files||[])); pt=j.nextPageToken}while(pt); return out}
-async function gdMkdir(name,parent,props){const r=await gdFetch(`${GAPI}/files?fields=id`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({name,mimeType:GFOLDER,parents:parent?[parent]:undefined,appProperties:props||{}})}); return (await r.json()).id}
-async function gdEnsure(key,name,parent,extra){let q=`trashed=false and mimeType='${GFOLDER}' and appProperties has { key='itse' and value='${key}' }`; if(parent) q+=` and '${parent}' in parents`;
-  if(extra) q+=` and name='${gdQ(name)}'`; const f=(await gdList(q,"files(id,name)"))[0]; return f?f.id:gdMkdir(name,parent,{itse:key})}
-async function gdPatch(id,meta){return (await gdFetch(`${GAPI}/files/${id}?fields=id,name,modifiedTime`,{method:"PATCH",headers:{"Content-Type":"application/json"},body:JSON.stringify(meta)})).json()}
-// create (no id) or replace the content of a file; small ones in one request, big ones in two (resumable)
-async function gdUpload({id,name,parent,mime,data,props}){const blob=data instanceof Blob?data:new Blob([data],{type:mime||"application/octet-stream"}), type=mime||blob.type||"application/octet-stream";
-  const meta=id?{name}:{name,parents:[parent]}; if(props) meta.appProperties=props;
-  if(blob.size<4.5e6){const b="itse"+Math.random().toString(36).slice(2);
-    const body=new Blob([`--${b}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${JSON.stringify(meta)}\r\n--${b}\r\nContent-Type: ${type}\r\n\r\n`,blob,`\r\n--${b}--`]);
-    return (await gdFetch(`${GUP}/files${id?"/"+id:""}?uploadType=multipart&fields=id,name,modifiedTime`,{method:id?"PATCH":"POST",headers:{"Content-Type":`multipart/related; boundary=${b}`},body})).json()}
-  const r=await gdFetch(`${GUP}/files${id?"/"+id:""}?uploadType=resumable&fields=id,name,modifiedTime`,{method:id?"PATCH":"POST",headers:{"Content-Type":"application/json; charset=UTF-8","X-Upload-Content-Type":type,"X-Upload-Content-Length":String(blob.size)},body:JSON.stringify(meta)});
-  const loc=r.headers.get("Location"); if(!loc) throw new Error("Drive no dio dirección de subida");
-  const r2=await fetch(loc,{method:"PUT",headers:{"Content-Type":type},body:blob}); if(!r2.ok) throw new Error("Drive no aceptó el archivo ("+r2.status+")"); return r2.json()}
-const gdGetText=async id=>(await gdFetch(`${GAPI}/files/${id}?alt=media`)).text();
-async function gdInit(){GD.ids.root=await gdEnsure("root","Generador ITSE",null);
-  [GD.ids.exp,GD.ids.bank]=await Promise.all([gdEnsure("exps","Expedientes",GD.ids.root),gdEnsure("bank","Banco",GD.ids.root)]);
-  try{const a=await (await gdFetch(`${GAPI}/about?fields=user(emailAddress,displayName)`)).json(); GD.email=a.user&&a.user.emailAddress||""; gdPref({email:GD.email})}catch(_){}
-  await Promise.all([gdLoadBank().catch(e=>console.warn(e)),gdLoadPriv().catch(e=>console.warn(e)),gdRefreshList()]); await gdDrainQueue().catch(e=>console.warn(e));
-  if(GD.dirty||(expHasData(S)&&!GD.map[S.uid])) await gdSave()}
+/* ---------- Servidor: cuentas, permisos y guardado en el Drive del administrador ----------
+   En la plataforma web todo pasa por el servidor (Google Apps Script con la cuenta del administrador):
+   inicio de sesión, registro con aprobación por correo, expedientes, banco de cocinas ocultas, apoderados y firma.
+   Cada usuario guarda en su propia carpeta; el administrador ve todo. El archivo «Generador ITSE.html» de la PC trabaja solo, sin internet. */
+const SRV={url:"",tok:"",me:null};
+(()=>{let u=String(window.ITSE_API||""); try{const loc=/^(localhost|127\.0\.0\.1)$/.test(location.hostname), qp=new URLSearchParams(location.search).get("api");
+  if(loc&&qp) localStorage.setItem("itse-api",qp); if(loc) u=localStorage.getItem("itse-api")||u}catch(_){} SRV.url=u})();
+const srvMode=()=>!!SRV.url&&/^https?:$/.test(location.protocol);
+const TOKK="itse-tok";
+const sleep=ms=>new Promise(ok=>setTimeout(ok,ms));
+// un pedido al servidor (texto plano: así el navegador no hace consulta previa y Google acepta el pedido)
+async function srv(a,body={},o={}){const tries=o.tries||(/^(login|register|pw|userpw|useredit|userdel|bankmeta|upc|privput)$/.test(a)?1:2); let j;
+  for(let i=0;;i++){try{const r=await fetch(SRV.url,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(Object.assign({},body,{a,t:SRV.tok})),cache:"no-store",redirect:"follow"}); j=await r.json(); break}
+    catch(e){if(i+1>=tries) throw Object.assign(new Error("No hay conexión con el servidor. Revisa tu internet y vuelve a intentar."),{code:"net"}); await sleep(900*(i+1))}}
+  if(!j||!j.ok){const e=new Error(j&&j.err||"El servidor no respondió bien."); e.code=j&&j.code||"srv"; if(e.code==="auth"&&SRV.me) srvLost(e.message); throw e}
+  return j}
+const UPCH=4*1024*1024; // partes de 4 MB (múltiplo de 256 KB, como pide Drive)
+const blobB64=b=>new Promise((ok,ko)=>{const r=new FileReader(); r.onload=()=>ok(String(r.result).split(",")[1]||""); r.onerror=()=>ko(r.error); r.readAsDataURL(b)});
+async function srvUpload(dest,file,name,onp){const size=file.size, mime=file.type||BK_MIME[(name.split(".").pop()||"").toLowerCase()]||"application/octet-stream";
+  if(!size) throw new Error("el archivo está vacío");
+  if(size<=UPCH) return srv("up",{dest,name,mime,size,b64:await blobB64(file)});
+  let j=await srv("up",{dest,name,mime,size});
+  for(let off=0;off<size;off+=UPCH){if(onp) onp(off/size); j=await srv("upc",{up:j.up,off,b64:await blobB64(file.slice(off,off+UPCH))})}
+  return j}
+async function srvDownload(id,name,mime){const parts=[]; let off=0;
+  for(;;){const j=await srv("dl",{id,off}); parts.push(b64(j.b64)); mime=mime||j.mime; off=j.off+j.n; if(!j.n||off>=j.size) break}
+  return new File(parts,name,{type:mime||"application/octet-stream"})}
+// permisos de quien entró (el archivo de la PC lo puede todo, menos administrar usuarios)
+const meP=()=>SRV.me&&SRV.me.perms||{};
+const isAdmin=()=>srvMode()&&!!(SRV.me&&SRV.me.admin);
+const canItse=()=>!srvMode()||!!meP().itse;
+const canSunarp=()=>!srvMode()||!!meP().sunarp;
+const canBank=()=>srvMode()?!!(SRV.me&&(SRV.me.admin||meP().itse&&meP().banco)):!!bank();
+const canAll=()=>srvMode()&&!!(SRV.me&&(SRV.me.admin||meP().todos));
+const whoName=id=>id===(SRV.me&&SRV.me.id)?"tú":id==="fav"?"Favio (administrador)":id;
 
-/* expedientes */
+/* ---------- expedientes ---------- */
+const GD={list:null,owners:[],saving:false,dirty:false,lastSave:0,err:"",map:{},bankDrive:false,bankRev:0,bcache:new Map(),busy:"",q:"",owner:"",root:"",priv:false,all:false,retry:null};
+let GD_KEY="itse-drive";
+const gdAvail=()=>srvMode();
+const gdReady=()=>srvMode()&&!!SRV.me&&!!meP().itse;
+function gdPref(upd){let p={}; try{p=JSON.parse(localStorage.getItem(GD_KEY)||"{}")}catch(_){} if(upd){Object.assign(p,upd); try{localStorage.setItem(GD_KEY,JSON.stringify(p))}catch(_){}} return p}
 const expCore=s=>{const o=s.org||{}, p=s.plan||{}, m=s.memo||{}; return {cod:(o.codigo||"").trim(),loc:(s.nombre_comercial||o.local||p.nombre_comercial||"").trim(),cli:(o.cliente||s.razon_social||o.razon||p.razon_social||m.razon_social||"").trim()}};
 function expHasData(s){if(!s||s._example) return false; const c=expCore(s); return !!(c.cod||c.loc||c.cli||s.ruc)}
 function expTitle(s){const c=expCore(s); return segName([c.cod,c.loc,c.cli].filter(Boolean).filter((x,i,a)=>a.findIndex(y=>onorm(y)===onorm(x))===i).join(" - "))||"EXPEDIENTE SIN NOMBRE"}
 function expParts(s){const o=s.org||{}, p=s.plan||{}, m=s.memo||{}, out=[];
   if(s.razon_social||s.nombre_comercial) out.push("itse"); if(p.razon_social||p.nombre_comercial||p.personal) out.push("plan");
   if(m.razon_social||(m.pisos||[]).some(x=>x&&(x.area||x.pqs||x.co2))) out.push("memo"); if(o.codigo||o.local||o.razon) out.push("org"); return out.join(",")}
-const cut=(s,n)=>String(s||"").slice(0,n);
 function expUid(s=S){if(!s.uid) s.uid="e"+Date.now().toString(36)+Math.random().toString(36).slice(2,7); return s.uid}
-async function gdExpFolder(uid,title){if(GD.map[uid]) return GD.map[uid];
-  const f=(await gdList(`trashed=false and mimeType='${GFOLDER}' and '${GD.ids.exp}' in parents and appProperties has { key='uid' and value='${gdQ(uid)}' }`,"files(id,name)"))[0];
-  let m; if(f){const d=(await gdList(`trashed=false and '${f.id}' in parents and appProperties has { key='itse' and value='data' }`,"files(id)"))[0]; m={fid:f.id,data:d&&d.id||null,name:f.name}}
-  else m={fid:await gdMkdir(title,GD.ids.exp,{itse:"exp",uid}),data:null,name:title};
-  return GD.map[uid]=m}
-// one expediente (any state object) → its folder in Drive
-async function gdPut(st){const uid=expUid(st), title=expTitle(st), c=expCore(st), m=await gdExpFolder(uid,title);
-  const r=await gdUpload({id:m.data,name:"Datos del expediente.json",parent:m.fid,mime:"application/json",data:JSON.stringify(st,null,1),props:{itse:"data",uid}}); m.data=r.id;
-  await gdPatch(m.fid,{name:title,appProperties:{itse:"exp",uid,cod:cut(c.cod,40),loc:cut(c.loc,80),cli:cut(c.cli,80),parts:expParts(st),at:String(Date.now())}}); m.name=title;
-  gdRecentTouch({uid,name:title,fid:m.fid,when:new Date().toISOString(),cod:c.cod,loc:c.loc,cli:c.cli,parts:expParts(st)}); return m}
+// un expediente (cualquier estado) → su carpeta en el Drive
+async function gdPut(st){const uid=expUid(st), c=expCore(st), m=GD.map[uid], parts=expParts(st);
+  const r=await srv("save",{st,fid:m&&m.fid||"",meta:{title:expTitle(st),cod:c.cod,loc:c.loc,cli:c.cli,parts}});
+  const old=(GD.list||[]).find(x=>x.fid===r.fid);
+  GD.map[uid]={fid:r.fid,name:r.name}; gdRecentTouch({uid,name:r.name,fid:r.fid,when:new Date(r.at||Date.now()).toISOString(),cod:c.cod,loc:c.loc,cli:c.cli,parts,owner:old?old.owner:SRV.me.id,by:SRV.me.id}); return GD.map[uid]}
 let gdT=null;
-function gdDirty(){if(!gdAvail()||!expHasData(S)) return; GD.dirty=true; clearTimeout(gdT); gdT=setTimeout(()=>{gdSave()},2500); gdUi()}
-async function gdSave(){if(!gdReady()||!GD.ids.exp||GD.saving) return; if(!expHasData(S)){GD.dirty=false; gdUi(); return}
+function gdDirty(){if(!gdReady()||!expHasData(S)) return; GD.dirty=true; try{localStorage.setItem(GD_KEY+":dirty","1")}catch(_){} clearTimeout(gdT); gdT=setTimeout(()=>{gdSave()},2500); gdUi()}
+async function gdSave(){if(!gdReady()||GD.saving) return; if(!expHasData(S)){GD.dirty=false; gdUi(); return}
   GD.saving=true; GD.dirty=false; gdUi();
-  try{const had=!!S.uid; await gdPut(S); if(!had) persistLocal(); GD.lastSave=Date.now(); GD.err=""}
-  catch(e){GD.dirty=true; GD.err=e.message; console.error(e)}
+  try{const had=!!S.uid; await gdPut(S); if(!had) persistLocal(); GD.lastSave=Date.now(); GD.err=""; clearTimeout(GD.retry); if(!GD.dirty) try{localStorage.removeItem(GD_KEY+":dirty")}catch(_){}}
+  catch(e){GD.dirty=true; GD.err=e.message; console.error(e); if(e.code!=="auth"){clearTimeout(GD.retry); GD.retry=setTimeout(()=>{if(GD.dirty) gdSave()},15000)}}
   finally{GD.saving=false; gdUi(); if(GD.dirty&&gdReady()&&!GD.err){clearTimeout(gdT); gdT=setTimeout(()=>{gdSave()},2500)}}}
 async function gdFlush(){clearTimeout(gdT); if(GD.dirty) await gdSave()}
-function gdRecentTouch(x){if(GD.list){const i=GD.list.findIndex(y=>y.uid===x.uid); if(i>=0) GD.list.splice(i,1); GD.list.unshift(x)}
-  const p=gdPref(), rec=(p.recent||[]).filter(y=>y.uid!==x.uid); rec.unshift(x); gdPref({recent:rec.slice(0,40)}); if(APP==="recent") recentListUpd()}
-async function gdRefreshList(){const fs=await gdList(`trashed=false and mimeType='${GFOLDER}' and '${GD.ids.exp}' in parents and appProperties has { key='itse' and value='exp' }`,"files(id,name,modifiedTime,appProperties)","modifiedTime desc");
-  GD.list=fs.map(f=>{const a=f.appProperties||{}; return {uid:a.uid,name:f.name,fid:f.id,when:a.at?new Date(Number(a.at)).toISOString():f.modifiedTime,cod:a.cod||"",loc:a.loc||"",cli:a.cli||"",parts:a.parts||""}}).sort((a,b)=>b.when.localeCompare(a.when));
-  gdPref({recent:GD.list.slice(0,40)}); if(APP==="recent") recentListUpd()}
+function gdRecentTouch(x){if(GD.list){const i=GD.list.findIndex(y=>y.uid===x.uid||y.fid===x.fid); if(i>=0) GD.list.splice(i,1); GD.list.unshift(x)}
+  const p=gdPref(), rec=(p.recent||[]).filter(y=>y.uid!==x.uid); rec.unshift(x); gdPref({recent:rec.slice(0,40)}); if(APP==="recent"&&SEC==="itse") recentListUpd()}
+async function gdRefreshList(){const j=await srv("list",{all:canAll()}); GD.list=j.list; GD.owners=j.owners||[]; GD.all=!!j.all; if(j.root) GD.root=j.root;
+  for(const x of GD.list) if(x.uid&&!GD.map[x.uid]) GD.map[x.uid]={fid:x.fid,name:x.name};
+  gdPref({recent:GD.list.slice(0,40)}); if(APP==="recent"&&SEC==="itse") recentListUpd()}
 function loadState(obj){S=Object.assign(blank(),obj); delete S._example; if(!S.nivel&&MATRIX[S.subcat]) S.nivel=MATRIX[S.subcat][0]; S.plan=planMigrate(S.plan);
   if(!S.logoAdj) S.logoAdj={}; if(!S.ov||typeof S.ov!=="object") S.ov={}; if(!S.step) S.step="inicio"; S.apoderados=fixApod(S.apoderados);
+  if(!String(S.apoderados||"").trim()&&String(DEFAULT_APODERADOS||"").trim()) S.apoderados=fixApod(DEFAULT_APODERADOS);
   ORG.files=[]; ORG.prop=null; ORG.view=null; ORG.bkDup=null; ORG.bku=null}
 async function gdOpen(fid){await gdFlush(); GD.busy="Abriendo…"; gdUi();
-  try{const d=(await gdList(`trashed=false and '${fid}' in parents and appProperties has { key='itse' and value='data' }`,"files(id)"))[0]; if(!d) throw new Error("esa carpeta no tiene «Datos del expediente.json»");
-    const st=JSON.parse(await gdGetText(d.id)); loadState(st); const uid=expUid(); GD.map[uid]={fid,data:d.id}; persistLocal(); GD.dirty=false;
-    const it=(GD.list||[]).find(x=>x.fid===fid); if(it) gdRecentTouch({...it}); return true}
+  try{const j=await srv("get",{fid}); loadState(j.st); const uid=expUid(); GD.map[uid]={fid,name:j.name}; persistLocal(); GD.dirty=false;
+    const it=(GD.list||[]).find(x=>x.fid===fid); if(it) gdRecentTouch(Object.assign({},it,{uid})); return true}
   finally{GD.busy=""; gdUi()}}
-// old "Datos del expediente.json" (or the ITSE .zip that carries it): same file twice = same expediente
+// «Datos del expediente.json» antiguo (o el .zip de ITSE que lo trae): el mismo archivo dos veces = el mismo expediente
 async function stateFromFile(f){let txt;
   if(/\.zip$/i.test(f.name)){const z=await JSZip.loadAsync(f), e=Object.values(z.files).find(x=>!x.dir&&/(^|\/)Datos del expediente\.json$/i.test(x.name)); if(!e) throw new Error(f.name+": no trae «Datos del expediente.json»"); txt=await e.async("string")}
   else txt=await f.text();
   let st; try{st=JSON.parse(txt)}catch(_){throw new Error(f.name+": no es un .json de este generador")} if(!st||typeof st!=="object"||!("razon_social" in st||"org" in st||"plan" in st)) throw new Error(f.name+": no es un .json de este generador");
   delete st._example; if(!st.uid) st.uid="j"+sha256(txt).slice(0,16); return st}
 async function gdImport(files){let ok=0, last=null; const errs=[];
-  for(const f of files){try{const st=await stateFromFile(f); if(!expHasData(st)) throw new Error(f.name+": no tiene datos del cliente"); if(gdReady()&&GD.ids.exp) await gdPut(st); else gdQueue(st); ok++; last=st}catch(e){errs.push(e.message)}}
+  for(const f of files){try{const st=await stateFromFile(f); if(!expHasData(st)) throw new Error(f.name+": no tiene datos del cliente"); if(gdReady()) await gdPut(st); else gdQueue(st); ok++; last=st}catch(e){errs.push(e.message)}}
   return {ok,errs,last}}
 function gdQueue(st){const p=gdPref(), qu=(p.queue||[]).filter(x=>x.uid!==st.uid); qu.push(st); try{gdPref({queue:qu.slice(-20)})}catch(_){}}
 async function gdDrainQueue(){const p=gdPref(); if(!(p.queue||[]).length||!gdReady()) return; for(const st of p.queue) await gdPut(st); gdPref({queue:[]})}
-// files downloaded from the other tabs also stay in the expediente's folder
-async function gdKeepOutput(name,blob){if(!gdReady()||!GD.ids.exp||!expHasData(S)||!blob||blob.size>60e6) return;
-  try{const m=await gdExpFolder(expUid(),expTitle(S)); const ex=(await gdList(`trashed=false and '${m.fid}' in parents and name='${gdQ(name)}'`,"files(id)"))[0];
-    await gdUpload({id:ex&&ex.id,name,parent:m.fid,mime:blob.type||"application/octet-stream",data:blob,props:{itse:"out"}}); if(!S.uid) persistLocal(); GD.lastSave=Date.now(); gdUi()}
-  catch(e){console.warn(e); GD.err="No se guardó en Drive: "+e.message; gdUi()}}
+// lo que se descarga de las otras pestañas también queda en la carpeta del expediente
+async function gdKeepOutput(name,blob){if(!gdReady()||!expHasData(S)||!blob||!blob.size||blob.size>60e6) return;
+  try{if(!GD.map[expUid()]) await gdPut(S); const m=GD.map[S.uid]; await srvUpload({k:"out",fid:m.fid},blob,name); if(!S.uid) persistLocal(); GD.lastSave=Date.now(); GD.err=""; gdUi()}
+  catch(e){console.warn(e); GD.err="No se guardó «"+name+"» en el servidor: "+e.message; gdUi()}}
 
-/* banco en Drive */
-async function gdLoadBank(){const f=(await gdList(`trashed=false and '${GD.ids.bank}' in parents and appProperties has { key='itse' and value='bankmeta' }`,"files(id)"))[0];
-  GD.bankMetaId=f&&f.id||null; if(!f) return; const meta=JSON.parse(await gdGetText(f.id)), emb=bankEmbedded();
-  if(!emb||String(meta.v||"")>=String(emb.v||"")){BANKM=meta; GD.bankDrive=true; if(APP==="org") render()}}
-async function gdSaveBankMeta(meta){const r=await gdUpload({id:GD.bankMetaId,name:"banco.json",parent:GD.ids.bank,mime:"application/json",data:JSON.stringify(meta),props:{itse:"bankmeta"}}); GD.bankMetaId=r.id}
-const gdBankDirs={};
-async function gdBankDir(kind,name){const k=kind+"|"+name; if(gdBankDirs[k]) return gdBankDirs[k];
-  const top=await gdEnsure(kind==="sede"?"banksedes":"bankowners",kind==="sede"?"Sedes":"Dueños",GD.ids.bank);
-  return gdBankDirs[k]=await gdEnsure(kind==="sede"?"banksede":"bankowner",segName(name),top,true)}
-async function gdBankPutDoc(kind,who,d,blob){const dir=await gdBankDir(kind,who); const r=await gdUpload({name:d.name,parent:dir,mime:BK_MIME[d.ext]||blob.type||"application/octet-stream",data:blob,props:{itse:"bankdoc",bid:d.id}}); d.gid=r.id; return r.id}
-// one time: the bank that lives inside the «Generador ITSE.html» of the PC goes to Drive
-async function gdBankImport(file){if(!gdReady()||!GD.ids.bank) throw new Error("Conecta Drive primero.");
+/* ---------- banco y datos privados en el servidor ---------- */
+async function gdLoadBank(){if(!canBank()) return; const j=await srv("bank"); if(!j.meta) return; BANKM=j.meta; GD.bankDrive=true; GD.bankRev=j.meta.rev||0; if(SEC==="itse"&&(APP==="org"||APP==="bank")) render()}
+async function gdSaveBankMeta(meta){const j=await srv("bankmeta",{meta,rev:GD.bankRev||0}); GD.bankRev=j.meta.rev||0; GD.bankDrive=true; return j.meta}
+async function gdBankPutDoc(kind,who,d,blob){const j=await srvUpload({k:"bank",kind:kind==="sede"?"sede":"own",who},blob,d.name); d.gid=j.id; return j.id}
+// una sola vez: el banco que vive dentro del «Generador ITSE.html» de la PC pasa al Drive (solo el administrador)
+async function gdBankImport(file){if(!isAdmin()) throw new Error("solo el administrador puede subir el banco");
   const txt=await file.text(), mm=txt.match(/<script type="application\/json" id="bk_meta">([\s\S]*?)<\/script>/); if(!mm) throw new Error("Ese archivo no trae el banco (elige el «Generador ITSE.html» de SYSTEM\\BASES).");
   const ma=txt.match(/(?:const|let) DEFAULT_APODERADOS=`([\s\S]*?)`;/), mf=txt.match(/"firma":\{"b64":"([^"]{200,})","w":(\d+),"h":(\d+),"fmt":"(\w+)"/);
-  if(ma||mf){GD.busy="Guardando apoderados y firma en tu Drive…"; gdUi(); await gdSavePriv({apoderados:ma?ma[1]:"",firma:mf?{b64:mf[1],w:+mf[2],h:+mf[3],fmt:mf[4]}:null})}
+  if(ma||mf){GD.busy="Guardando apoderados y firma…"; gdUi(); await gdSavePriv({apoderados:ma?ma[1]:"",firma:mf?{b64:mf[1],w:+mf[2],h:+mf[3],fmt:mf[4]}:null})}
   const meta=JSON.parse(mm[1]), parts=new Map(); for(const seg of txt.split('<script type="text/plain" id="bk_').slice(1)){const i=seg.indexOf('">'), j=seg.indexOf("<\/script>"); if(i>0&&j>i) parts.set(seg.slice(0,i),seg.slice(i+2,j).trim())}
-  const all=[...meta.sedes.map(s=>({x:s,kind:"sede",who:s.nombre})),...meta.owners.map(w=>({x:w,kind:"own",who:w.razon}))]; let n=0; const tot=all.reduce((a,y)=>a+y.x.docs.length,0);
-  for(const y of all) for(const d of y.x.docs){const b=parts.get(d.id); if(!b) throw new Error("falta "+d.name+" en ese archivo"); GD.busy=`Subiendo el banco a tu Drive… ${++n} de ${tot}`; gdUi();
+  const all=[...meta.sedes.map(s=>({x:s,kind:"sede",who:s.nombre})),...meta.owners.map(w=>({x:w,kind:"own",who:w.razon}))]; let n=0; const tot=all.reduce((a,y)=>a+y.x.docs.length+(y.x.bak||[]).length,0);
+  for(const y of all) for(const d of [...y.x.docs,...(y.x.bak||[])]){const b=parts.get(d.id); if(!b) throw new Error("falta "+d.name+" en ese archivo"); GD.busy=`Subiendo el banco… ${++n} de ${tot}`; gdUi();
     await gdBankPutDoc(y.kind,y.who,d,new Blob([b64(b)],{type:BK_MIME[d.ext]||"application/octet-stream"}))}
-  await gdSaveBankMeta(meta); BANKM=meta; GD.bankDrive=true; GD.busy=""; gdUi(); return tot}
-// apoderados (con DNI) y firma: en la versión pública no van en el código; se guardan en tu Drive (Generador ITSE / Configuración privada.json)
-async function gdLoadPriv(){const f=(await gdList(`trashed=false and '${GD.ids.root}' in parents and appProperties has { key='itse' and value='priv' }`,"files(id)"))[0];
-  GD.privId=f&&f.id||null; if(!f) return false; gdApplyPriv(JSON.parse(await gdGetText(f.id))); return true}
+  BANKM=await gdSaveBankMeta(meta); GD.busy=""; gdUi(); return tot}
+async function bkFileA(d){if(document.getElementById("bk_"+d.id)) return bkFile(d); const k=d.gid||d.id; if(GD.bcache.has(k)) return GD.bcache.get(k);
+  if(!d.gid) throw new Error("falta "+d.name+" en el banco"); if(!srvMode()||!SRV.me) throw new Error("entra a la plataforma para traer "+d.name+" del banco");
+  const f=await srvDownload(d.gid,d.name,BK_MIME[d.ext]); GD.bcache.set(k,f); return f}
+// apoderados (con DNI) y firma: en la versión pública no van en el código; los da el servidor a quien tiene ITSE
+async function gdLoadPriv(){const j=await srv("priv"); if(!j.pv) return false; gdApplyPriv(j.pv); return true}
 function gdApplyPriv(pv){GD.priv=true; if(pv.apoderados&&!String(DEFAULT_APODERADOS||"").trim()){DEFAULT_APODERADOS=pv.apoderados; if(!String(S.apoderados||"").trim()){S.apoderados=fixApod(pv.apoderados); persistLocal()}}
-  if(pv.firma&&pv.firma.b64&&MIMG.firma&&MIMG.firma.ph) MIMG.firma=pv.firma; if(APP!=="recent") render()}
-async function gdSavePriv(pv){const r=await gdUpload({id:GD.privId,name:"Configuración privada.json",parent:GD.ids.root,mime:"application/json",data:JSON.stringify(pv),props:{itse:"priv"}}); GD.privId=r.id; gdApplyPriv(pv)}
+  if(pv.firma&&pv.firma.b64&&MIMG.firma&&MIMG.firma.ph) MIMG.firma=pv.firma; if(APP!=="recent"&&document.body.classList.contains("authed")) render()}
+async function gdSavePriv(pv){await srv("privput",{pv}); gdApplyPriv(pv)}
 const privNeeded=()=>!String(DEFAULT_APODERADOS||"").trim()||!!(MIMG.firma&&MIMG.firma.ph);
-async function bkFileA(d){if(document.getElementById("bk_"+d.id)) return bkFile(d); if(GD.bcache.has(d.id)) return GD.bcache.get(d.id);
-  if(!d.gid) throw new Error("falta "+d.name+" en el banco"); if(!gdReady()) throw new Error("conecta Drive para traer "+d.name+" del banco");
-  const b=await (await gdFetch(`${GAPI}/files/${d.gid}?alt=media`)).blob(), f=new File([b],d.name,{type:BK_MIME[d.ext]||b.type||"application/octet-stream"}); GD.bcache.set(d.id,f); return f}
+async function gdInit(){if(!gdReady()&&!canBank()) return; GD.busy="Leyendo tus expedientes…"; gdUi();
+  try{await Promise.all([gdReady()?gdRefreshList().catch(e=>{GD.err=e.message}):null,canBank()?gdLoadBank().catch(e=>console.warn(e)):null,canItse()?gdLoadPriv().catch(e=>console.warn(e)):null]);
+    await gdDrainQueue().catch(e=>console.warn(e));
+    if(gdReady()&&expHasData(S)&&(GD.dirty||!GD.map[expUid()])) await gdSave()}
+  finally{GD.busy=""; gdUi(); render()}}
 
-/* estado de Drive en la cabecera */
-function gdUi(){const b=document.getElementById("btnDrive"); if(b){if(!gdAvail()){b.hidden=true} else {b.hidden=false;
-    const t=GD.busy?GD.busy:GD.st==="conn"?"Conectando…":GD.st==="exp"?"Reconectar Drive":!gdReady()?"Conectar Drive":GD.saving?"Guardando en Drive…":GD.dirty?"Drive: cambios por guardar":GD.lastSave?"Drive ✓ "+new Date(GD.lastSave).toLocaleTimeString("es-PE",{hour:"2-digit",minute:"2-digit"}):"Drive ✓";
-    b.textContent=t; b.classList.toggle("primary",!gdReady()); b.title=GD.err||(GD.email?"Conectado como "+GD.email:"Guardar los expedientes en tu Google Drive")}}
-  if(APP==="recent"){const s=document.getElementById("rcStat"); if(s) s.innerHTML=recentStatHTML()}}
+/* estado del guardado en la cabecera */
+function gdUi(){const b=document.getElementById("btnDrive"); if(b){if(!gdReady()) b.hidden=true; else {b.hidden=SEC!=="itse";
+    const t=GD.busy?GD.busy:GD.saving?"Guardando…":GD.err?"Sin guardar ⚠":GD.dirty?"Cambios por guardar":GD.lastSave?"Guardado ✓ "+new Date(GD.lastSave).toLocaleTimeString("es-PE",{hour:"2-digit",minute:"2-digit"}):"Guardado ✓";
+    b.textContent=t; b.classList.toggle("warnb",!!GD.err); b.title=GD.err||"Cada cambio se guarda solo. Toca para ver tus expedientes."}}
+  if(APP==="recent"&&SEC==="itse"){const s=document.getElementById("rcStat"); if(s) s.innerHTML=recentStatHTML()}}
 
 /* ---------- pestaña Recientes ---------- */
 const fdt=iso=>{if(!iso) return ""; const d=new Date(iso); return isNaN(d)?"":`${fdmy(d)} ${d.toLocaleTimeString("es-PE",{hour:"2-digit",minute:"2-digit"})}`};
 const RC_PARTS={itse:"ITSE",plan:"Plan",memo:"Memoria",org:"Carpetas"};
-function recentStatHTML(){if(!gdAvail()) return `<p class="muted" style="margin:0">Este archivo trabaja sin internet. Para ver y guardar todo en tu Google Drive abre la plataforma web.</p>`;
+const driveLink=id=>isAdmin()&&id?`https://drive.google.com/drive/folders/${id}`:"";
+function recentStatHTML(){if(!srvMode()) return `<p class="muted" style="margin:0">Este archivo trabaja sin internet y guarda solo en esta computadora. Para guardar todo en línea y ver los expedientes desde cualquier lugar, entra a la plataforma web.</p>`;
   if(GD.busy) return `<p class="info" style="margin:0">${esc(GD.busy)}</p>`;
-  if(!gdReady()) return `<div class="rcconn"><p style="margin:0">${GD.st==="exp"?"La sesión de Google venció (dura una hora).":"Conecta tu Google Drive para ver tus expedientes y que cada cambio se guarde solo."}</p><button type="button" class="btn primary" data-ract="connect">${GD.st==="exp"?"Reconectar Drive":"Conectar Google Drive"}</button>${GD.err?`<p class="bad" style="margin:6px 0 0">${esc(GD.err)}</p>`:""}</div>`;
-  return `<p style="margin:0">Drive conectado${GD.email?` como <b>${esc(GD.email)}</b>`:""}. Cada cambio se guarda solo en <b>Generador ITSE / Expedientes</b>.${GD.ids.root?` <a href="https://drive.google.com/drive/folders/${GD.ids.root}" target="_blank" rel="noopener">Abrir en Drive ↗</a>`:""}</p>${GD.err?`<p class="bad" style="margin:6px 0 0">${esc(GD.err)}</p>`:""}`}
-function recentRows(){const src=GD.list||gdPref().recent||[], q=onorm(GD.q||""); const cur=S.uid;
-  const rows=src.filter(x=>!q||onorm([x.name,x.cod,x.loc,x.cli].join(" ")).includes(q));
-  if(!rows.length) return `<p class="muted" style="margin:0">${src.length?"Ningún expediente coincide con la búsqueda.":gdReady()?"Aún no hay expedientes en tu Drive. Llena cualquier pestaña y se guarda solo, o sube tus .json antiguos.":"Sin expedientes guardados todavía."}</p>`;
-  return `<ul class="rcl">${rows.slice(0,GD.all?500:60).map(x=>`<li class="${x.uid&&x.uid===cur?"cur":""}"><button type="button" class="rcopen" data-ract="open" data-fid="${esc(x.fid||"")}" data-uid="${esc(x.uid||"")}"${gdReady()&&x.fid?"":" disabled"}>
+  const where=isAdmin()?`en tu Google Drive, carpeta <b>Generador ITSE</b>${GD.root?` <a href="${driveLink(GD.root)}" target="_blank" rel="noopener">Abrir ↗</a>`:""}`:`en la nube de Safety (tu carpeta personal)`;
+  return `<p style="margin:0">Cada cambio se guarda solo ${where}.${GD.all?` Ves los expedientes de todos los usuarios.`:""}</p>${GD.err?`<p class="bad" style="margin:6px 0 0">${esc(GD.err)} <button type="button" class="btn sm" data-ract="refresh">Reintentar</button></p>`:""}`}
+function recentRows(){const src=GD.list||gdPref().recent||[], q=onorm(GD.q||""), cur=S.uid, own=GD.owner;
+  const rows=src.filter(x=>(!q||onorm([x.name,x.cod,x.loc,x.cli,x.owner].join(" ")).includes(q))&&(!own||x.owner===own));
+  if(!rows.length) return `<p class="muted" style="margin:0">${src.length?"Ningún expediente coincide con la búsqueda.":gdReady()?"Aún no hay expedientes guardados. Llena cualquier pestaña y se guarda solo, o sube tus .json antiguos.":"Sin expedientes guardados todavía."}</p>`;
+  return `<ul class="rcl">${rows.slice(0,GD.allRows?800:60).map(x=>`<li class="${x.uid&&x.uid===cur?"cur":""}"><button type="button" class="rcopen" data-ract="open" data-fid="${esc(x.fid||"")}" data-uid="${esc(x.uid||"")}"${gdReady()&&x.fid?"":" disabled"}>
       <span class="rct">${esc(x.name||"(sin nombre)")}</span><span class="muted rcm">${esc(fdt(x.when))}${x.uid&&x.uid===cur?" · abierto ahora":""}</span>
-      <span class="rcp">${String(x.parts||"").split(",").filter(Boolean).map(p=>`<span class="chip">${RC_PARTS[p]||p}</span>`).join("")}</span></button>
-      ${x.fid?`<a class="btn rcdrive" href="https://drive.google.com/drive/folders/${esc(x.fid)}" target="_blank" rel="noopener" title="Abrir su carpeta en Drive">Drive ↗</a>`:""}</li>`).join("")}</ul>
-    ${rows.length>60&&!GD.all?`<button type="button" class="btn" data-ract="all" style="margin-top:8px">Ver los ${rows.length}</button>`:""}`}
+      <span class="rcp">${GD.all&&x.owner?`<span class="chip own">${esc(x.owner===SRV.me.id?"Tuyo":"De "+whoName(x.owner))}</span>`:""}${String(x.parts||"").split(",").filter(Boolean).map(p=>`<span class="chip">${RC_PARTS[p]||p}</span>`).join("")}</span></button>
+      ${driveLink(x.fid)?`<a class="btn rcdrive" href="${driveLink(x.fid)}" target="_blank" rel="noopener" title="Abrir su carpeta en Drive">Drive ↗</a>`:""}</li>`).join("")}</ul>
+    ${rows.length>60&&!GD.allRows?`<button type="button" class="btn" data-ract="all" style="margin-top:8px">Ver los ${rows.length}</button>`:""}`}
 function recentListUpd(){const l=document.getElementById("rcList"); if(l) l.innerHTML=recentRows()}
-function renderRecent(){const B=bank(), cur=expHasData(S)?expTitle(S):"";
+function renderRecent(){const B=bank(), cur=expHasData(S)?expTitle(S):"", m=S.uid&&GD.map[S.uid];
   let h=`<section class="card"><h2>Expedientes recientes</h2><div id="rcStat">${recentStatHTML()}</div>
     <div class="acts rcacts"><button type="button" class="btn primary" data-ract="new">Nuevo expediente</button><button type="button" class="btn" data-ract="pick">Subir .json o .zip antiguos…</button>${gdReady()?`<button type="button" class="btn" data-ract="refresh">Actualizar lista</button>`:""}</div>
-    ${cur?`<p class="muted" style="margin:10px 0 0">Abierto ahora: <b>${esc(cur)}</b>${S.uid&&GD.map[S.uid]?` · <a href="https://drive.google.com/drive/folders/${GD.map[S.uid].fid}" target="_blank" rel="noopener">su carpeta ↗</a>`:""}</p>`:""}
-    <div class="f" style="margin-top:12px"><label for="rcQ">Buscar</label><input type="search" id="rcQ" placeholder="Código, local o cliente" value="${esc(GD.q||"")}" autocomplete="off"></div>
+    ${cur?`<p class="muted" style="margin:10px 0 0">Abierto ahora: <b>${esc(cur)}</b>${m&&driveLink(m.fid)?` · <a href="${driveLink(m.fid)}" target="_blank" rel="noopener">su carpeta ↗</a>`:""}</p>`:""}
+    <div class="grid" style="margin-top:12px"><div class="f ${GD.all?"c8":"c12"}"><label for="rcQ">Buscar</label><input type="search" id="rcQ" placeholder="Código, local o cliente" value="${esc(GD.q||"")}" autocomplete="off"></div>
+    ${GD.all?`<div class="f c4"><label for="rcOwn">De quién</label><select id="rcOwn"><option value="">Todos</option>${GD.owners.map(o=>`<option value="${esc(o)}"${GD.owner===o?" selected":""}>${esc(o===SRV.me.id?"Míos":whoName(o))}</option>`).join("")}</select></div>`:""}</div>
     <div id="rcList" style="margin-top:10px">${recentRows()}</div></section>`;
-  if(gdAvail()) h+=`<section class="card"><h2>Banco de cocinas ocultas y dueños</h2>${!gdReady()?`<p class="muted" style="margin:0">Conecta Drive para usarlo.</p>`
-    :GD.bankDrive&&B?`<p style="margin:0">En tu Drive: <b>${B.sedes.length} sedes</b> y <b>${B.owners.length} dueños</b> (al ${esc(fdmy(bkDate(B.v)))}). Se adjunta solo en «Organizar archivos».${GD.ids.bank?` <a href="https://drive.google.com/drive/folders/${GD.ids.bank}" target="_blank" rel="noopener">Ver en Drive ↗</a>`:""}</p>`
-    :`<p style="margin:0 0 8px">Aún no está en tu Drive. Súbelo una vez desde el archivo «Generador ITSE.html» de tu PC (SYSTEM\\BASES): los certificados y documentos del banco y tus datos privados (lista de apoderados y firma) quedan solo en tu Drive.</p><button type="button" class="btn" data-ract="bankpick">Subir el banco a Drive…</button>`}
-    ${gdReady()&&GD.bankDrive&&privNeeded()&&!GD.priv?`<p class="warn" style="margin:8px 0 0">Faltan la lista de apoderados y la firma: vuelve a subir el «Generador ITSE.html» de tu PC. <button type="button" class="btn" data-ract="bankpick">Elegir archivo…</button></p>`:""}</section>`;
+  if(isAdmin()) h+=`<section class="card"><h2>Banco de cocinas ocultas y dueños</h2>${GD.bankDrive&&B?`<p style="margin:0">En el servidor: <b>${B.sedes.length} sedes</b> y <b>${B.owners.length} dueños</b> (al ${esc(fdmy(bkDate(B.v)))}). Se adjunta solo en «Organizar archivos» y se actualiza en la pestaña <button type="button" class="lnk" data-app="bank">Banco de cocinas</button>.</p>`
+    :`<p style="margin:0 0 8px">Aún no está en el servidor. Súbelo una vez desde el archivo «Generador ITSE.html» de tu PC (SYSTEM\\BASES): los certificados y documentos del banco y tus datos privados (lista de apoderados y firma) quedan solo en tu Drive.</p><button type="button" class="btn" data-ract="bankpick">Subir el banco…</button>`}
+    ${GD.bankDrive&&privNeeded()&&!GD.priv?`<p class="warn" style="margin:8px 0 0">Faltan la lista de apoderados y la firma: vuelve a subir el «Generador ITSE.html» de tu PC. <button type="button" class="btn" data-ract="bankpick">Elegir archivo…</button></p>`:""}</section>`;
   h+=`<input type="file" id="rcFiles" accept=".json,.zip,application/json,application/zip" multiple hidden><input type="file" id="rcBank" accept=".html,text/html" hidden>`;
   $("#form").innerHTML=h; $("#exBanner").hidden=true; bar(); schedulePreview(0)}
-function recentBar(){const n=(GD.list||gdPref().recent||[]).length; $("#barRisk").innerHTML=`<b>Recientes</b><span class="muted">· ${n} expediente${n===1?"":"s"}${gdReady()?" en tu Drive":""}</span>`}
+function recentBar(){const n=(GD.list||gdPref().recent||[]).length; $("#barRisk").innerHTML=`<b>Recientes</b><span class="muted">· ${n} expediente${n===1?"":"s"}${gdReady()?" guardados":""}</span>`}
 function drawRecent(body){$("#pvTabs").innerHTML=`<button type="button" class="pv-tab" role="tab" aria-selected="true">Expediente abierto</button>`; $("#logoTools").hidden=true; $("#pvNote").innerHTML="Lo que tienes abierto ahora. Ábrelo en cualquier pestaña para seguir trabajando.";
   if(!expHasData(S)){body.innerHTML=`<div class="oview"><p class="muted">No hay un expediente abierto. Elige uno de la lista o empieza uno nuevo.</p></div>`; return}
   const c=expCore(S), parts=expParts(S).split(",").filter(Boolean), m=S.uid&&GD.map[S.uid];
   body.innerHTML=`<div class="oview rcpv"><h3 style="margin:0 0 8px">${esc(expTitle(S))}</h3><dl>
     ${c.cod?`<dt>Código</dt><dd>${esc(c.cod)}</dd>`:""}${c.loc?`<dt>Local</dt><dd>${esc(c.loc)}</dd>`:""}${c.cli?`<dt>Cliente</dt><dd>${esc(c.cli)}</dd>`:""}${S.ruc?`<dt>RUC</dt><dd>${esc(S.ruc)}</dd>`:""}
     <dt>Avance</dt><dd>${parts.length?parts.map(p=>`<span class="chip ok">${RC_PARTS[p]}</span>`).join(" "):"—"}</dd>
-    <dt>Drive</dt><dd>${m?`Guardado${GD.lastSave?" "+esc(fdt(new Date(GD.lastSave).toISOString())):""} · <a href="https://drive.google.com/drive/folders/${m.fid}" target="_blank" rel="noopener">carpeta ↗</a>`:gdReady()?"Se guarda al primer cambio":"Sin conectar"}</dd></dl>
-    <div class="acts" style="margin-top:12px">${["itse","plan","memo","org"].map(a=>`<button type="button" class="btn" data-app="${a}">${{itse:"ITSE",plan:"Plan de seguridad",memo:"Memoria de extintores",org:"Organizar archivos"}[a]}</button>`).join("")}</div></div>`}
+    <dt>Guardado</dt><dd>${!srvMode()?"En esta computadora":m?`Sí${GD.lastSave?" · "+esc(fdt(new Date(GD.lastSave).toISOString())):""}${driveLink(m.fid)?` · <a href="${driveLink(m.fid)}" target="_blank" rel="noopener">carpeta ↗</a>`:""}`:"Se guarda al primer cambio"}</dd></dl>
+    <div class="acts" style="margin-top:12px">${["itse","plan","memo","org"].map(a=>`<button type="button" class="btn" data-app="${a}">${{itse:"Anexos ITSE",plan:"Plan de seguridad",memo:"Memoria de extintores",org:"Organizar archivos"}[a]}</button>`).join("")}</div></div>`}
 async function recentAction(b){const a=b.dataset.ract;
-  if(a==="connect"){if(await gdStart()) render(); return}
-  if(a==="refresh"){try{GD.busy="Leyendo tu Drive…"; gdUi(); await gdRefreshList(); await gdLoadBank().catch(()=>{})}catch(e){say(e.message,"err")} finally{GD.busy=""; gdUi(); render()} return}
-  if(a==="all"){GD.all=true; recentListUpd(); return}
-  if(a==="new"){await gdFlush(); loadState(blank()); delete S.uid; persistLocal(); APP="itse"; try{localStorage.setItem("itse-app",APP)}catch(_){} render(); say("Expediente nuevo: se guarda en Drive al escribir el primer dato.","ok"); window.scrollTo(0,0); return}
+  if(a==="refresh"){try{GD.busy="Leyendo…"; GD.err=""; gdUi(); await gdRefreshList(); await gdLoadBank().catch(()=>{})}catch(e){GD.err=e.message} finally{GD.busy=""; gdUi(); render()} return}
+  if(a==="all"){GD.allRows=true; recentListUpd(); return}
+  if(a==="new"){await gdFlush(); loadState(blank()); delete S.uid; persistLocal(); APP="itse"; try{localStorage.setItem("itse-app",APP)}catch(_){} render(); say(gdReady()?"Expediente nuevo: se guarda solo al escribir el primer dato.":"Expediente nuevo.","ok"); window.scrollTo(0,0); return}
   if(a==="pick") return $("#rcFiles").click();
   if(a==="bankpick") return $("#rcBank").click();
   if(a==="open"){const fid=b.dataset.fid; if(!fid) return; try{await gdOpen(fid); APP=S.step&&S.org&&(S.org.codigo||S.org.local)&&!S.razon_social?"org":"itse"; try{localStorage.setItem("itse-app",APP)}catch(_){} render(); say(`Abierto: ${expTitle(S)}.`,"ok"); window.scrollTo(0,0)}catch(e){say("No se pudo abrir: "+e.message,"err")} return}}
-document.addEventListener("click",e=>{if(APP!=="recent") return; const b=e.target.closest("[data-ract]"); if(!b) return; e.preventDefault(); e.stopImmediatePropagation(); recentAction(b)},true);
+document.addEventListener("click",e=>{if(APP!=="recent"||SEC!=="itse") return; const b=e.target.closest("[data-ract]"); if(!b) return; e.preventDefault(); e.stopImmediatePropagation(); recentAction(b)},true);
 document.addEventListener("input",e=>{if(APP==="recent"&&e.target.id==="rcQ"){GD.q=e.target.value; recentListUpd()}});
 document.addEventListener("change",async e=>{const el=e.target;
+  if(el.id==="rcOwn"){GD.owner=el.value; recentListUpd(); return}
   if(el.id==="rcFiles"&&el.files.length){const fs=[...el.files]; el.value=""; GD.busy="Subiendo expedientes…"; gdUi();
     try{const r=await gdImport(fs); if(r.ok===1&&fs.length===1){loadState(r.last); persistLocal()}
-      say(`${r.ok} expediente${r.ok===1?"":"s"} ${gdReady()?"subido"+(r.ok===1?"":"s")+" a tu Drive":"guardado"+(r.ok===1?"":"s")+": se suben al conectar Drive"}${r.errs.length?" · "+r.errs.join(" · "):""}.`,r.errs.length?"err":"ok")}
+      say(`${r.ok} expediente${r.ok===1?"":"s"} ${gdReady()?"guardado"+(r.ok===1?"":"s")+" en línea":"guardado"+(r.ok===1?"":"s")+": se suben al entrar a la plataforma"}${r.errs.length?" · "+r.errs.join(" · "):""}.`,r.errs.length?"err":"ok")}
     finally{GD.busy=""; gdUi(); render()} return}
   if(el.id==="rcBank"&&el.files.length){const f=el.files[0]; el.value="";
-    try{const n=await gdBankImport(f); say(`Banco en tu Drive: ${n} documentos.`,"ok")}catch(err){GD.busy=""; say("No se subió el banco: "+err.message,"err")} finally{gdUi(); render()}}});
-document.addEventListener("click",e=>{if(e.target.closest("#btnDrive")){e.preventDefault(); e.stopImmediatePropagation(); if(!gdReady()) gdStart().then(ok=>{if(ok) render()}); else {APP="recent"; try{localStorage.setItem("itse-app",APP)}catch(_){} render()}}},true);
+    try{const n=await gdBankImport(f); say(`Banco en el servidor: ${n} documentos.`,"ok")}catch(err){GD.busy=""; say("No se subió el banco: "+err.message,"err")} finally{gdUi(); render()}}});
+document.addEventListener("click",e=>{if(e.target.closest("#btnDrive")){e.preventDefault(); e.stopImmediatePropagation(); if(GD.err&&GD.dirty) gdSave(); SEC="itse"; APP="recent"; try{localStorage.setItem("itse-app",APP)}catch(_){} render()}},true);
 window.addEventListener("beforeunload",e=>{if(GD.dirty||GD.saving){gdSave(); e.preventDefault(); e.returnValue=""}});
-if(gdAvail()) gdLoad().catch(()=>{});
+
+/* ---------- visor con zoom (PDF e imágenes) ---------- */
+const ZV={file:null,pdf:null,img:null,page:1,pages:1,z:1,fit:true,tok:0,task:null,url:"",rt:null,pts:new Map(),pinch:null};
+function zvImg(file){return new Promise((ok,ko)=>{const u=URL.createObjectURL(file), im=new Image(); im.onload=()=>ok(im); im.onerror=()=>{URL.revokeObjectURL(u); ko(new Error("el navegador no abre esta imagen"))}; im.src=u})}
+async function zvOpen(src,title){const el=$("#zv"); el.hidden=false; document.body.classList.add("zvon"); $("#zvTitle").textContent=title||""; $("#zvMsg").textContent="Cargando…"; $("#zvMsg").hidden=false;
+  const cv=$("#zvCanvas"); cv.width=1; cv.height=1; cv.style.width="0px"; cv.style.height="0px"; ZV.pdf=null; ZV.img=null; if(ZV.url){URL.revokeObjectURL(ZV.url); ZV.url=""}
+  const tok=++ZV.tok; setTimeout(()=>{const c=$("#zvClose"); if(c) c.focus()},30);
+  try{const file=typeof src==="function"?await src():src; if(tok!==ZV.tok) return; ZV.file=file; ZV.page=1; ZV.fit=true;
+    if(/pdf$/i.test(file.type)||/\.pdf$/i.test(file.name||"")){const lib=await oPdf(); ZV.pdf=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer()),isEvalSupported:false}).promise; ZV.pages=ZV.pdf.numPages}
+    else if(/^image\//.test(file.type)||/\.(jpe?g|png|gif|webp|bmp|jfif)$/i.test(file.name||"")){ZV.img=await zvImg(file); ZV.pages=1}
+    else throw new Error("este tipo de archivo no tiene vista; usa «Descargar»");
+    if(tok!==ZV.tok) return; $("#zvMsg").hidden=true; await zvDraw()}
+  catch(e){if(tok===ZV.tok){$("#zvMsg").textContent="No se pudo abrir: "+(e&&e.message||e); $("#zvMsg").hidden=false}}}
+function zvClose(){ZV.tok++; $("#zv").hidden=true; document.body.classList.remove("zvon"); if(ZV.task) try{ZV.task.cancel()}catch(_){} ZV.pdf=null; ZV.img=null; ZV.file=null}
+async function zvSize(){if(ZV.pdf){const p=await ZV.pdf.getPage(ZV.page), v=p.getViewport({scale:1}); return {w:v.width,h:v.height,p}} return ZV.img?{w:ZV.img.naturalWidth,h:ZV.img.naturalHeight,p:null}:null}
+async function zvDraw(){const box=$("#zvBody"), cv=$("#zvCanvas"), s0=await zvSize(); if(!s0) return;
+  if(ZV.fit) ZV.z=Math.max(.05,Math.min((box.clientWidth-24)/s0.w,(box.clientHeight-24)/s0.h));
+  cv.style.width=Math.round(s0.w*ZV.z)+"px"; cv.style.height=Math.round(s0.h*ZV.z)+"px"; zvLbl(); await zvPaint(s0)}
+async function zvPaint(s0){const cv=$("#zvCanvas"), tok=ZV.tok; s0=s0||await zvSize(); if(!s0) return;
+  const dpr=window.devicePixelRatio||1; let sc=ZV.z*dpr; const maxPx=16e6; if(s0.w*s0.h*sc*sc>maxPx) sc=Math.sqrt(maxPx/(s0.w*s0.h));
+  const c=document.createElement("canvas"); c.width=Math.max(1,Math.round(s0.w*sc)); c.height=Math.max(1,Math.round(s0.h*sc)); const x=c.getContext("2d"); x.fillStyle="#fff"; x.fillRect(0,0,c.width,c.height);
+  if(s0.p){if(ZV.task) try{ZV.task.cancel()}catch(_){} ZV.task=s0.p.render({canvasContext:x,viewport:s0.p.getViewport({scale:sc})}); try{await ZV.task.promise}catch(_){return}}
+  else x.drawImage(ZV.img,0,0,c.width,c.height);
+  if(tok!==ZV.tok) return; cv.width=c.width; cv.height=c.height; cv.getContext("2d").drawImage(c,0,0)}
+function zvLbl(){$("#zvPct").textContent=Math.round(ZV.z*100)+" %"; $("#zvPg").textContent=`${ZV.page} / ${ZV.pages}`; $("#zvPgs").hidden=ZV.pages<2; $("#zvPrev").disabled=ZV.page<=1; $("#zvNext").disabled=ZV.page>=ZV.pages}
+// acercar o alejar dejando quieto el punto bajo el cursor (o el centro)
+async function zvZoom(nz,cx,cy){const box=$("#zvBody"), cv=$("#zvCanvas"), s0=await zvSize(); if(!s0) return; nz=Math.max(.05,Math.min(8,nz));
+  const r=box.getBoundingClientRect(); if(cx==null){cx=r.left+box.clientWidth/2; cy=r.top+box.clientHeight/2}
+  const cr=cv.getBoundingClientRect(), px=(cx-cr.left)/cr.width, py=(cy-cr.top)/cr.height;
+  ZV.fit=false; ZV.z=nz; cv.style.width=Math.round(s0.w*nz)+"px"; cv.style.height=Math.round(s0.h*nz)+"px"; zvLbl();
+  const cr2=cv.getBoundingClientRect(); box.scrollLeft+=cr2.left+px*cr2.width-cx; box.scrollTop+=cr2.top+py*cr2.height-cy;
+  clearTimeout(ZV.rt); ZV.rt=setTimeout(()=>zvPaint(),140)}
+async function zvPage(d){const n=ZV.page+d; if(n<1||n>ZV.pages) return; ZV.page=n; $("#zvBody").scrollTop=0; await zvDraw()}
+async function zvDownload(){if(!ZV.file) return; const a=document.createElement("a"); a.href=URL.createObjectURL(ZV.file); a.download=ZV.file.name||"archivo"; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),20000)}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-zv]"); if(!b) return; const k=b.dataset.zv;
+  if(k==="close") zvClose(); else if(k==="in") zvZoom(ZV.z*1.25); else if(k==="out") zvZoom(ZV.z/1.25); else if(k==="fit"){ZV.fit=true; zvDraw()} else if(k==="100") zvZoom(1); else if(k==="prev") zvPage(-1); else if(k==="next") zvPage(1); else if(k==="dl") zvDownload()});
+document.addEventListener("keydown",e=>{if($("#zv").hidden) return; if(e.key==="Escape"){e.preventDefault(); zvClose()} else if(e.key==="+"||e.key==="="){e.preventDefault(); zvZoom(ZV.z*1.25)} else if(e.key==="-"){e.preventDefault(); zvZoom(ZV.z/1.25)}
+  else if(e.key==="0"){ZV.fit=true; zvDraw()} else if(e.key==="PageDown"||(e.key==="ArrowRight"&&ZV.fit)){e.preventDefault(); zvPage(1)} else if(e.key==="PageUp"||(e.key==="ArrowLeft"&&ZV.fit)){e.preventDefault(); zvPage(-1)}});
+window.addEventListener("resize",()=>{if(!$("#zv").hidden&&ZV.fit) zvDraw()});
+(()=>{const box=document.getElementById("zvBody"); if(!box) return; let drag=null;
+  box.addEventListener("wheel",e=>{if(e.ctrlKey||e.metaKey||ZV.fit&&!e.shiftKey&&Math.abs(e.deltaY)>Math.abs(e.deltaX)&&box.scrollHeight<=box.clientHeight+2){e.preventDefault(); zvZoom(ZV.z*Math.exp(-e.deltaY*(e.ctrlKey?.01:.0015)),e.clientX,e.clientY)}},{passive:false});
+  box.addEventListener("dblclick",e=>{if(ZV.fit||ZV.z<.9) zvZoom(Math.max(1,ZV.z*2),e.clientX,e.clientY); else {ZV.fit=true; zvDraw()}});
+  box.addEventListener("pointerdown",e=>{ZV.pts.set(e.pointerId,{x:e.clientX,y:e.clientY}); box.setPointerCapture(e.pointerId);
+    if(ZV.pts.size===2){const [a,b]=[...ZV.pts.values()]; ZV.pinch={d:Math.hypot(a.x-b.x,a.y-b.y),z:ZV.z}; drag=null} else drag={x:e.clientX,y:e.clientY,l:box.scrollLeft,t:box.scrollTop}; box.classList.add("grab")});
+  box.addEventListener("pointermove",e=>{if(!ZV.pts.has(e.pointerId)) return; ZV.pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(ZV.pinch&&ZV.pts.size===2){const [a,b]=[...ZV.pts.values()], d=Math.hypot(a.x-b.x,a.y-b.y); zvZoom(ZV.pinch.z*d/ZV.pinch.d,(a.x+b.x)/2,(a.y+b.y)/2)}
+    else if(drag){box.scrollLeft=drag.l-(e.clientX-drag.x); box.scrollTop=drag.t-(e.clientY-drag.y)}});
+  const up=e=>{ZV.pts.delete(e.pointerId); if(ZV.pts.size<2) ZV.pinch=null; if(!ZV.pts.size){drag=null; box.classList.remove("grab")}};
+  box.addEventListener("pointerup",up); box.addEventListener("pointercancel",up)})();
+
+/* ---------- pestaña Banco de cocinas: un recuadro por sede y por dueño; se suelta el documento nuevo y va a su lugar ---------- */
+const BKV={tab:"sedes",q:"",pend:new Map(),seq:0,thumbs:new Map(),target:null,busy:false};
+const bkKey=(kind,id)=>kind+":"+id;
+const bkEntName=(kind,x)=>kind==="sede"?x.nombre:x.razon;
+function bkEnt(kind,id){const B=bank(); return B&&(kind==="sede"?B.sedes:B.owners).find(x=>x.id===id)||null}
+function bkTypeList(kind){const L=(f,t,lbl)=>({f,t,lbl:lbl||bkCap(bkLbl({f,t,rep:""}))}), dflt=f=>deacc(OFI[f].label).toUpperCase();
+  if(kind!=="sede") return [L("dni","DNI","DNI del representante"),L("dni","CARNET DE EXTRANJERIA","Carné de extranjería del representante"),L("vig","VIGENCIA DE PODER"),L("vig","COPIA LITERAL (PODERES)"),L("ruc","FICHA RUC")];
+  const out=[L("itseac","CERTIFICADO ITSE DE AREAS COMUNES"),L("pozos","POZOS A TIERRA"),L("luces","LUCES DE EMERGENCIA"),L("daci","DETECCION Y ALARMA CONTRA INCENDIOS"),L("daci","DETECCION Y ALARMA DE GAS NATURAL"),
+    L("aci","AGUA CONTRA INCENDIOS"),L("campana","MANTENIMIENTO DEL SISTEMA DE EXTRACCION"),L("campana","PUESTA A TIERRA DE CAMPANAS EXTRACTORAS"),L("ascen","ASCENSORES"),L("ascen","MONTACARGAS"),L("drywall","DECLARACIÓN JURADA DE MURO DRYWALL RF")];
+  for(const f of BKU_SEDE_F) if(!out.some(x=>x.f===f)&&OFI[f]) out.push(L(f,dflt(f),OFI[f].label));
+  return out}
+const bkTypeKey=x=>x.f+"|"+x.t;
+function bkDocTitle(d){return bkCap(bkLbl(d))+(d.f==="dni"&&d.rep?" · "+bkWho(d.rep):"")}
+function bkThumbAttr(id){const t=BKV.thumbs.get(id); return t&&t!=="x"?` style="background-image:url(${t})"`:""}
+function bkThumbBtn(view,id,ext,lbl){return `<button type="button" class="bxth${BKV.thumbs.get(id)&&BKV.thumbs.get(id)!=="x"?" has":""}" data-bkview="${esc(view)}" data-thumb="${esc(id)}"${bkThumbAttr(id)} aria-label="Ver ${esc(lbl)} en grande" title="Ver en grande">${BKV.thumbs.get(id)&&BKV.thumbs.get(id)!=="x"?"":esc(String(ext||"").toUpperCase().slice(0,4))}</button>`}
+function bkDocRow(kind,x,d){const v=bkValidity(d), k=bkKey(kind,x.id);
+  return `<li class="bxd">${bkThumbBtn(k+":"+d.id,d.id,d.ext,bkDocTitle(d))}<div class="bxdi"><span class="bxdt">${esc(bkDocTitle(d))}</span><span class="muted bxfn">${esc(d.name)}</span></div>
+    <div class="bxda">${v?`<span class="chip ${v.c}">${esc(v.t)}</span>`:""}<button type="button" class="btn sm" data-bkrepl="${esc(k+":"+d.id)}">Reemplazar…</button></div></li>`}
+function bkBakRow(kind,x,d){const k=bkKey(kind,x.id), v=bkValidity(d);
+  return `<li class="bxd">${bkThumbBtn(k+":"+d.id+":b",d.id,d.ext,bkDocTitle(d))}<div class="bxdi"><span class="bxdt">${esc(bkDocTitle(d))}</span><span class="muted bxfn">${esc(d.name)}${d.out?` · guardado como respaldo el ${esc(fdmy(bkDate(d.out)))}`:""}${d.by?` por ${esc(whoName(d.by))}`:""}</span></div>
+    <div class="bxda">${v?`<span class="chip ${v.c==="ok"?"":v.c}">${esc(v.t)}</span>`:""}<button type="button" class="btn sm" data-bkrestore="${esc(k+":"+d.id)}">Volver a usar</button></div></li>`}
+function bkSlotOf(x,it){return it.slot&&it.slot!=="new"?x.docs.find(d=>d.id===it.slot)||null:null}
+function bkTypeOf(x,it){const s=bkSlotOf(x,it); if(it.slot==="new") return it.tNew||(it.f?{f:it.f,t:it.t}:null); if(s) return it.f&&it.ok&&!it.ask&&bkuKind(it.f,it.t)===bkuKind(s.f,s.t)?{f:it.f,t:it.t}:{f:s.f,t:s.t}; return null}
+function bkPendHTML(kind,x,it){const k=bkKey(kind,x.id), pk=k+":"+it.pid;
+  if(it.st==="leyendo") return `<div class="bxp"><p class="muted" style="margin:0">Leyendo «${esc(it.file.name)}»…</p></div>`;
+  if(it.st==="guardando") return `<div class="bxp"><p class="info" style="margin:0">Guardando «${esc(it.file.name)}» en el banco…</p></div>`;
+  const slot=bkSlotOf(x,it), ask=!!it.ask, ty=bkTypeOf(x,it), lbl=ty?bkCap(bkLbl({f:ty.f,t:ty.t,rep:""})):"";
+  const nv=it.f?bkValidity({f:ty?ty.f:it.f,t:ty?ty.t:it.t,em:it.em,ve:it.ve}):null;
+  let h=`<div class="bxp${ask?" ask":""}"><div class="bxpn">${bkThumbBtn("p:"+pk,"p"+it.pid,(it.file.name.split(".").pop()||""),it.file.name)}<div class="bxdi"><span class="bxdt">${esc(it.file.name)}</span><span class="muted">${it.file.size<1048576?Math.max(1,Math.round(it.file.size/1024))+" KB":(it.file.size/1048576).toFixed(1)+" MB"}${it.ocr?" · leído con OCR":""}</span></div></div>`;
+  if(!ask){h+=`<p class="bxpq">Se reconoce: <b>${esc(lbl)}</b>${it.em?` · emitido ${esc(fdmy(bkDate(it.em)))}`:""}${nv?` · <span class="chip ${nv.c}">${esc(nv.t)}</span>`:""}</p>`;
+    h+=slot?`<div class="bxrep"><span class="muted">Va en lugar de:</span>${bkThumbBtn(k+":"+slot.id,slot.id,slot.ext,bkDocTitle(slot))}<span><b>${esc(bkDocTitle(slot))}</b> ${(()=>{const v=bkValidity(slot); return v?`<span class="chip ${v.c}">${esc(v.t)}</span>`:""})()}<br><span class="muted">${esc(slot.name)}</span></span></div>
+      <p class="muted bxsafe">El anterior no se borra: queda en «Respaldo» de este recuadro y se puede volver a usar.</p>`
+      :`<p class="muted bxsafe">Se agrega como documento nuevo de ${kind==="sede"?"la sede":"la empresa"}.</p>`}
+  else {h+=`<p class="bxpq">${it.f?`Parece <b>${esc(bkCap(bkLbl({f:it.f,t:it.t,rep:""})))}</b>, pero no estoy seguro.`:`No pude identificar este documento.`} <b>¿Dónde lo guardo?</b></p>
+      <p class="muted bxsafe">Tranquilo: ya tienes respaldo. Lo que reemplaces no se borra, queda en «Respaldo» y se puede volver a usar. Toca una vista para verla en grande.</p>
+      <div class="bxch">${x.docs.map(d=>{const v=bkValidity(d); return `<label class="bxc${it.slot===d.id?" on":""}"><input type="radio" name="bxc_${it.pid}" data-bkslot="${esc(pk)}" value="${esc(d.id)}"${it.slot===d.id?" checked":""}>${bkThumbBtn(k+":"+d.id,d.id,d.ext,bkDocTitle(d))}<span class="bxct"><b>En lugar de: ${esc(bkDocTitle(d))}</b>${v?` <span class="chip ${v.c}">${esc(v.t)}</span>`:""}</span></label>`}).join("")}
+        <label class="bxc new${it.slot==="new"?" on":""}"><input type="radio" name="bxc_${it.pid}" data-bkslot="${esc(pk)}" value="new"${it.slot==="new"?" checked":""}><span class="bxct"><b>Como documento nuevo:</b>
+          <select data-bktype="${esc(pk)}" aria-label="Tipo de documento"><option value="">Elegir tipo…</option>${bkTypeList(kind).map(o=>`<option value="${esc(bkTypeKey(o))}"${it.tNew&&bkTypeKey(it.tNew)===bkTypeKey(o)?" selected":""}>${esc(o.lbl)}</option>`).join("")}</select></span></label></div>`}
+  const ready=!!ty&&(it.slot!=="new"||!!(it.tNew||it.f));
+  h+=`<div class="bxdates"><div class="f"><label>Fecha de emisión</label><input type="date" data-bkdate="${esc(pk)}:em" value="${esc(it.em||"")}"></div><div class="f"><label>Vence</label><input type="date" data-bkdate="${esc(pk)}:ve" value="${esc(it.ve||"")}"></div>
+    <span class="muted">${ty&&!it.ve&&OVIG[ty.f]?`Si no pones el vencimiento, se calcula: ${OVIG[ty.f]} meses desde la emisión.`:""}</span></div>
+    <div class="acts"><button type="button" class="btn primary" data-bkgo="${esc(pk)}"${ready?"":" disabled"}>Guardar en el banco</button>${!ask?`<button type="button" class="btn" data-bkask="${esc(pk)}">No, elegir otro lugar</button>`:""}<button type="button" class="btn" data-bkx="${esc(pk)}">Descartar</button></div>
+    ${it.err?`<p class="bad" style="margin:6px 0 0">${esc(it.err)}</p>`:""}</div>`;
+  return h}
+function bkBoxHTML(kind,x){const k=bkKey(kind,x.id), P=BKV.pend.get(k)||[], bad=x.docs.filter(d=>{const v=bkValidity(d); return v&&v.c==="bad"}).length, sub=kind==="sede"?[x.direccion,x.operador].filter(Boolean).join(" · "):[x.ruc?"RUC "+x.ruc:"",x.nc&&!onorm(x.razon).includes(onorm(x.nc))?x.nc:""].filter(Boolean).join(" · ");
+  return `<article class="bx" data-bx="${esc(k)}"><header class="bxh"><div class="bxn"><b>${esc(bkEntName(kind,x))}</b>${sub?`<span class="muted">${esc(sub)}</span>`:""}</div><div class="bxst"><span class="chip">${x.docs.length} doc.</span>${bad?`<span class="chip bad">${bad} vencido${bad===1?"":"s"}</span>`:""}</div></header>
+    <ul class="bxl">${x.docs.map(d=>bkDocRow(kind,x,d)).join("")||`<li class="muted">Sin documentos todavía.</li>`}</ul>
+    ${kind!=="sede"&&(x.reps||[]).length?`<p class="muted bxreps">${x.reps.map(r=>`${esc(r[0])} — ${esc(r[1])} ${esc(r[2])}`).join("<br>")}</p>`:""}
+    ${P.map(it=>bkPendHTML(kind,x,it)).join("")}
+    <div class="bxdrop" data-bkpick="${esc(k)}" role="button" tabindex="0"><b>Suelta aquí el documento actualizado</b><span class="muted">o toca para elegirlo · se reconoce solo y va a su lugar</span></div>
+    ${(x.bak||[]).length?`<details class="bxbak"><summary>Respaldo (${x.bak.length})</summary><ul class="bxl">${x.bak.map(d=>bkBakRow(kind,x,d)).join("")}</ul></details>`:""}</article>`}
+function renderBank(){const B=bank();
+  if(!B){$("#form").innerHTML=`<section class="card"><h2>Banco de cocinas ocultas</h2><p class="muted" style="margin:0">${srvMode()?(GD.busy?"Cargando…":"El banco aún no está en el servidor."+(isAdmin()?" Súbelo desde la pestaña Recientes.":"")):"Este archivo no trae el banco."}</p></section>`; bar(); return}
+  const q=onorm(BKV.q), list=(BKV.tab==="sedes"?B.sedes.map(x=>["sede",x]):B.owners.map(x=>["own",x])).filter(([kind,x])=>!q||onorm([bkEntName(kind,x),x.direccion,x.distrito,x.ruc,x.nc,(x.reps||[]).map(r=>r[0]).join(" ")].join(" ")).includes(q));
+  const nb=[...B.sedes,...B.owners].reduce((a,x)=>a+x.docs.filter(d=>{const v=bkValidity(d); return v&&v.c==="bad"}).length,0);
+  $("#form").innerHTML=`<section class="card"><h2>Banco de cocinas ocultas</h2>
+    <p style="margin:0 0 4px">${B.sedes.length} sedes y ${B.owners.length} dueños · actualizado al ${esc(fdmy(bkDate(B.v)))}${B.by?` por ${esc(whoName(B.by))}`:""}${nb?` · <b class="bad">${nb} documento${nb===1?"":"s"} vencido${nb===1?"":"s"}</b>`:""}.</p>
+    <p class="muted" style="margin:0">Cuando llegue un certificado nuevo (por ejemplo, el ITSE de áreas comunes renovado), suéltalo en el recuadro de su sede o dueño: se lee, se reconoce y va exactamente a su lugar. El anterior queda como respaldo.${srvMode()?"":" En este archivo, guardar arma un «Generador ITSE.html» nuevo con el banco al día."}</p>
+    <div class="bktools"><div class="seg" role="tablist" aria-label="Ver"><label class="segopt"><input type="radio" name="bktab" data-bktab="sedes"${BKV.tab==="sedes"?" checked":""}><span>Sedes (${B.sedes.length})</span></label><label class="segopt"><input type="radio" name="bktab" data-bktab="owners"${BKV.tab==="owners"?" checked":""}><span>Dueños (${B.owners.length})</span></label></div>
+      <div class="f"><label for="bkQ" class="sr">Buscar</label><input type="search" id="bkQ" placeholder="Buscar sede, dueño, RUC o representante" value="${esc(BKV.q)}" autocomplete="off"></div></div>
+    <div class="bxgrid" id="bxGrid">${list.map(([kind,x])=>bkBoxHTML(kind,x)).join("")||`<p class="muted">Nada coincide con la búsqueda.</p>`}</div></section>
+    <input type="file" id="bkPick" accept=".pdf,image/*" multiple hidden>`;
+  $("#exBanner").hidden=true; bar(); bkThumbsWatch()}
+function bankBar(){const B=bank(); $("#barRisk").innerHTML=`<b>Banco de cocinas</b>${B?`<span class="muted">· ${B.sedes.length} sedes · ${B.owners.length} dueños</span>`:""}`}
+function bkBoxUpd(k){const el=document.querySelector(`.bx[data-bx="${CSS.escape(k)}"]`); if(!el) return render(); const [kind,id]=[k.slice(0,k.indexOf(":")),k.slice(k.indexOf(":")+1)], x=bkEnt(kind,id); if(!x) return render();
+  const open=[...el.querySelectorAll("details")].map(d=>d.open); const t=document.createElement("div"); t.innerHTML=bkBoxHTML(kind,x); const nw=t.firstElementChild; el.replaceWith(nw);
+  nw.querySelectorAll("details").forEach((d,i)=>{if(open[i]) d.open=true}); bkThumbsWatch()}
+// miniaturas: se arman al aparecer en pantalla, de a dos
+let bkObs=null; const bkTQ=[]; let bkTN=0;
+function bkThumbsWatch(){if(!("IntersectionObserver" in window)) return; if(!bkObs) bkObs=new IntersectionObserver(es=>{for(const e of es) if(e.isIntersecting){bkObs.unobserve(e.target); const id=e.target.dataset.thumb; if(!BKV.thumbs.has(id)&&!bkTQ.includes(id)){bkTQ.push(id); bkThumbPump()}}},{rootMargin:"200px"});
+  document.querySelectorAll("#bxGrid [data-thumb]").forEach(el=>{if(!BKV.thumbs.has(el.dataset.thumb)) bkObs.observe(el)})}
+function bkDocById(id){const B=bank(); if(!B) return null; for(const x of [...B.sedes,...B.owners]) for(const d of [...x.docs,...(x.bak||[])]) if(d.id===id) return d; return null}
+function bkPendById(pid){for(const L of BKV.pend.values()){const it=L.find(i=>"p"+i.pid===pid); if(it) return it} return null}
+async function bkThumbFor(file){if(/\.pdf$/i.test(file.name)||/pdf$/.test(file.type)){const lib=await oPdf(), pdf=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer()),isEvalSupported:false}).promise; return oThumb(await oRenderPage(await pdf.getPage(1),220),180)}
+  return oThumb(await oImgCanvas(file,400),180)}
+async function bkThumbPump(){while(bkTN<2&&bkTQ.length){const id=bkTQ.shift(); bkTN++;
+  (async()=>{let url="x"; try{if(id[0]==="p"&&!bkDocById(id)){const it=bkPendById(id); url=it&&it.thumb||(it?await bkThumbFor(it.file):"x")} else {const d=bkDocById(id); if(d) url=await bkThumbFor(await bkFileA(d))}}catch(e){console.warn(e)}
+    BKV.thumbs.set(id,url); if(url!=="x") document.querySelectorAll(`[data-thumb="${CSS.escape(id)}"]`).forEach(el=>{el.style.backgroundImage=`url(${url})`; el.textContent=""; el.classList.add("has")})})().finally(()=>{bkTN--; bkThumbPump()})}}
+// llega un archivo al recuadro: se lee (texto u OCR), se reconoce y se propone su lugar
+async function bkDrop(k,files,slotId){const [kind,id]=[k.slice(0,k.indexOf(":")),k.slice(k.indexOf(":")+1)], x=bkEnt(kind,id); if(!x) return; const L=BKV.pend.get(k)||[]; BKV.pend.set(k,L);
+  const items=[...files].filter(f=>f&&f.size&&!OSKIP.test(f.name)).map(file=>({pid:++BKV.seq,file,st:"leyendo",slot:slotId||"",fixed:!!slotId}));
+  if(!items.length) return; L.push(...items); bkBoxUpd(k);
+  for(const it of items){try{await bkAnalyze(kind,bkEnt(kind,id),it)}catch(e){console.error(e); it.st="listo"; it.ask=true; it.err="No se pudo leer: "+(e&&e.message||e)} bkBoxUpd(k)}}
+async function bkAnalyze(kind,x,it){const R=await orgRead(it.file), n=onorm(R.text), nm=onorm(it.file.name), ext=(it.file.name.split(".").pop()||"").toLowerCase(), dd=orgPickDates(n);
+  it.text=R.text; it.ocr=R.ocr; if(R.thumb){it.thumb=R.thumb; BKV.thumbs.set("p"+it.pid,R.thumb)} it.em=bkIso(dd.em)||""; it.ve=bkIso(dd.ve)||"";
+  const c=orgClassify({n:R.ocr&&R.conf!=null&&R.conf<50?"":n,nm,ext,em:dd.em||null}); let f=c.f;
+  if(kind==="sede"){if(/^(itse|itseant|cert|res|itseac)$/.test(f||"")) f="itseac"; if(f&&!BKU_SEDE_F.has(f)) f=null}
+  else {if(f==="copialit") f="vig"; if(f&&!BKU_OWN_F.has(f)) f=null}
+  it.f=f; it.ok=!!f&&c.conf!=="baja"&&!(oLetters(R.text)<30); it.t=f?bkuType({f,text:R.text,name:it.file.name}):"";
+  if(it.fixed){const s=x.docs.find(d=>d.id===it.slot); it.ask=!(it.ok&&s&&bkuKind(f,it.t)===bkuKind(s.f,s.t))&&!(f==="dni"&&s&&s.f==="dni"); if(it.ask&&!it.ok) it.ask=false; it.st="listo"; return}
+  if(f){const kk=bkuKind(f,it.t); let s=kk?x.docs.find(d=>bkuKind(d.f,d.t)===kk):null;
+    if(f==="dni"){const nums=(x.reps||[]).filter(r=>r[2]&&n.includes(String(r[2]).replace(/^0+/,""))); const ds=x.docs.filter(d=>d.f==="dni");
+      s=nums.length?ds.find(d=>onorm(d.rep||"").split(/[ ,-]+/).filter(w=>w.length>3).some(w=>onorm(nums[0][0]).includes(w)))||null:ds.length===1?ds[0]:null;
+      if(nums.length) it.rep=(/extranjeria/.test(n)?"CARNET DE EXTRANJERIA - ":"DNI - ")+nums[0][0].toLocaleUpperCase("es-PE")}
+    it.slot=s?s.id:"new"; it.ask=!it.ok}
+  else {it.slot=""; it.ask=true}
+  it.st="listo"}
+function bkPendGet(pk){const i=pk.lastIndexOf(":"), k=pk.slice(0,i), pid=+pk.slice(i+1), L=BKV.pend.get(k)||[]; return {k,it:L.find(x=>x.pid===pid),L}}
+async function bkSavePend(pk){const {k,it,L}=bkPendGet(pk); if(!it||BKV.busy) return; const kind=k.slice(0,k.indexOf(":")), id=k.slice(k.indexOf(":")+1), B=bank(), x0=bkEnt(kind,id), ty=bkTypeOf(x0,it);
+  if(!ty) return; BKV.busy=true; it.st="guardando"; it.err=""; bkBoxUpd(k);
+  try{const meta=JSON.parse(JSON.stringify(B)), x=(kind==="sede"?meta.sedes:meta.owners).find(y=>y.id===id), slot=it.slot&&it.slot!=="new"?x.docs.find(d=>d.id===it.slot):null;
+    const nid="d"+Date.now().toString(36)+Math.random().toString(36).slice(2,5), ext=(it.file.name.split(".").pop()||"pdf").toLowerCase();
+    const who=srvMode()&&SRV.me?SRV.me.name:"este archivo";
+    const nd={id:nid,name:it.file.name,ext,f:ty.f,t:ty.t,em:it.em||null,ve:it.ve||null,src:`Banco · ${who} · ${fdmy(new Date())}`,code:"",size:it.file.size,sha:await oHash(it.file)};
+    if(ty.f==="dni") nd.rep=it.rep||(slot&&slot.rep)||"";
+    if(slot) x.docs[x.docs.indexOf(slot)]=nd; else x.docs.push(nd);
+    meta.v=bkIso(new Date());
+    if(srvMode()){await gdBankPutDoc(kind,bkEntName(kind,x),nd,it.file); GD.bcache.set(nd.gid,it.file); BANKM=await gdSaveBankMeta(meta)}
+    else {if(slot) x.bak=[Object.assign({},slot,{out:bkIso(new Date())}),...(x.bak||[])]; const blobs=new Map([[nid,await bkB64(it.file)]]), page=bkPage(meta,blobs), r=await bkSaveFile(page);
+      if(r==="cancel"){it.st="listo"; say("No se guardó."); return}
+      for(const [bid,b] of blobs){const s=document.createElement("script"); s.type="text/plain"; s.id="bk_"+bid; s.textContent=b; document.body.appendChild(s)} BANKM=meta}
+    if(it.thumb) BKV.thumbs.set(nid,it.thumb);
+    L.splice(L.indexOf(it),1); say(`Guardado en el banco: ${bkCap(bkLbl(nd))} de ${bkEntName(kind,x)}${slot?"; el anterior quedó en Respaldo":""}.${srvMode()?"":" Desde ahora abre el archivo nuevo."}`,"ok"); render()}
+  catch(e){console.error(e); it.st="listo"; it.err="No se guardó: "+(e&&e.message||e); if(e&&e.code==="conflict") gdLoadBank().catch(()=>{}); bkBoxUpd(k)}
+  finally{BKV.busy=false}}
+async function bkRestore(spec){if(BKV.busy) return; const p=spec.split(":"), kind=p[0], id=p[1], bid=p[2], B=bank(); BKV.busy=true;
+  try{const meta=JSON.parse(JSON.stringify(B)), x=(kind==="sede"?meta.sedes:meta.owners).find(y=>y.id===id), b=(x.bak||[]).find(d=>d.id===bid); if(!b) return;
+    const kk=bkuKind(b.f,b.t), cur=kk?x.docs.find(d=>bkuKind(d.f,d.t)===kk):null, nd=Object.assign({},b); delete nd.out; delete nd.by;
+    if(cur) x.docs[x.docs.indexOf(cur)]=nd; else x.docs.push(nd); meta.v=bkIso(new Date());
+    if(srvMode()){say("Volviendo a usar el respaldo…"); BANKM=await gdSaveBankMeta(meta)}
+    else {x.bak=x.bak.filter(d=>d.id!==bid); if(cur) x.bak.unshift(Object.assign({},cur,{out:bkIso(new Date())})); const r=await bkSaveFile(bkPage(meta,new Map())); if(r==="cancel"){say("No se guardó."); return} BANKM=meta}
+    say(`Listo: se volvió a usar «${b.name}»${cur?"; el que estaba pasó a Respaldo":""}.`,"ok"); render()}
+  catch(e){console.error(e); say("No se pudo: "+(e&&e.message||e),"err"); if(e&&e.code==="conflict") gdLoadBank().catch(()=>{})}
+  finally{BKV.busy=false}}
+function bkViewSpec(spec){const p=spec.split(":");
+  if(p[0]==="p"){const {it}=bkPendGet(p.slice(1).join(":")); if(it) zvOpen(it.file,it.file.name); return}
+  const x=bkEnt(p[0],p[1]); if(!x) return; const d=[...x.docs,...(x.bak||[])].find(y=>y.id===p[2]); if(d) zvOpen(()=>bkFileA(d),bkDocTitle(d)+" · "+bkEntName(p[0],x))}
+document.addEventListener("click",e=>{if(SEC!=="itse"||APP!=="bank") return; const t=e.target;
+  const v=t.closest("[data-bkview]"); if(v){e.preventDefault(); if(v.closest(".bxc")) {const r=v.closest(".bxc").querySelector("input"); if(r&&!r.checked){r.checked=true; r.dispatchEvent(new Event("change",{bubbles:true}))}} bkViewSpec(v.dataset.bkview); return}
+  const pk=t.closest("[data-bkpick]"); if(pk){BKV.target={k:pk.dataset.bkpick,slot:""}; $("#bkPick").click(); return}
+  const rp=t.closest("[data-bkrepl]"); if(rp){const s=rp.dataset.bkrepl, i=s.lastIndexOf(":"); BKV.target={k:s.slice(0,i),slot:s.slice(i+1)}; $("#bkPick").multiple=false; $("#bkPick").click(); $("#bkPick").multiple=true; return}
+  const g=t.closest("[data-bkgo]"); if(g){bkSavePend(g.dataset.bkgo); return}
+  const a=t.closest("[data-bkask]"); if(a){const {k,it}=bkPendGet(a.dataset.bkask); if(it){it.ask=true; if(it.slot==="new"&&!it.tNew) it.slot=""; bkBoxUpd(k)} return}
+  const xx=t.closest("[data-bkx]"); if(xx){const {k,it,L}=bkPendGet(xx.dataset.bkx); if(it){L.splice(L.indexOf(it),1); bkBoxUpd(k)} return}
+  const rs=t.closest("[data-bkrestore]"); if(rs){bkRestore(rs.dataset.bkrestore); return}});
+document.addEventListener("keydown",e=>{if(SEC==="itse"&&APP==="bank"&&(e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("[data-bkpick]")){e.preventDefault(); e.target.click()}});
+document.addEventListener("change",e=>{if(SEC!=="itse"||APP!=="bank") return; const el=e.target;
+  if(el.id==="bkPick"&&el.files.length&&BKV.target){const T=BKV.target, fs=[...el.files]; el.value=""; BKV.target=null; bkDrop(T.k,fs,T.slot); return}
+  if(el.dataset.bktab){BKV.tab=el.dataset.bktab; render(); return}
+  if(el.dataset.bkslot){const {k,it}=bkPendGet(el.dataset.bkslot); if(it){it.slot=el.value; bkBoxUpd(k)} return}
+  if(el.dataset.bktype){const {k,it}=bkPendGet(el.dataset.bktype); if(it){const [f,...t]=el.value.split("|"); it.tNew=el.value?{f,t:t.join("|")}:null; it.slot="new"; bkBoxUpd(k)} return}
+  if(el.dataset.bkdate){const s=el.dataset.bkdate, i=s.lastIndexOf(":"), {k,it}=bkPendGet(s.slice(0,i)); if(it){it[s.slice(i+1)]=el.value; bkBoxUpd(k)} return}});
+document.addEventListener("input",e=>{if(SEC==="itse"&&APP==="bank"&&e.target.id==="bkQ"){BKV.q=e.target.value; const pos=e.target.selectionStart; render(); const q=$("#bkQ"); if(q){q.focus(); try{q.setSelectionRange(pos,pos)}catch(_){}}}});
+const dtFiles=e=>!!e.dataTransfer&&[...(e.dataTransfer.types||[])].includes("Files");
+document.addEventListener("dragover",e=>{if(SEC!=="itse"||APP!=="bank"||!dtFiles(e)) return; e.preventDefault(); const b=e.target.closest(".bx"); document.querySelectorAll(".bx.over").forEach(x=>{if(x!==b) x.classList.remove("over")}); if(b) b.classList.add("over"); else e.dataTransfer.dropEffect="none"});
+document.addEventListener("dragleave",e=>{const b=e.target.closest&&e.target.closest(".bx"); if(b&&!b.contains(e.relatedTarget)) b.classList.remove("over")});
+document.addEventListener("drop",e=>{if(SEC!=="itse"||APP!=="bank"||!dtFiles(e)) return; e.preventDefault(); const b=e.target.closest(".bx"); document.querySelectorAll(".bx.over").forEach(x=>x.classList.remove("over"));
+  if(!b){say("Suéltalo dentro del recuadro de su sede o de su dueño.","err"); return} if(e.dataTransfer.files.length) bkDrop(b.dataset.bx,e.dataTransfer.files,"")});
+
+/* ---------- secciones: ITSE, SUNARP y Usuarios ---------- */
+let SEC="itse"; try{const s=localStorage.getItem("itse-sec"); if(/^(itse|sunarp|users)$/.test(s||"")) SEC=s}catch(_){}
+function secFix(){if(SEC==="users"&&!isAdmin()) SEC="itse"; if(SEC==="itse"&&!canItse()) SEC=canSunarp()?"sunarp":"none"; if(SEC==="sunarp"&&!canSunarp()) SEC=canItse()?"itse":"none"; if(SEC==="none"&&canItse()) SEC="itse"; if(APP==="bank"&&!canBank()) APP="recent"}
+function secUi(){secFix(); document.querySelectorAll("#secNav [data-sec]").forEach(b=>{const k=b.dataset.sec; b.hidden=k==="users"?!isAdmin():k==="itse"?!canItse():!canSunarp(); b.setAttribute("aria-selected",String(k===SEC))});
+  $("#appTabs").hidden=SEC!=="itse"; const bt=document.querySelector('.apptab[data-app="bank"]'); if(bt) bt.hidden=!canBank();
+  const nav=$("#appTabs"), cur=nav.querySelector(`[data-app="${APP}"]`); if(cur&&nav.scrollWidth>nav.clientWidth){const r=cur.getBoundingClientRect(), n=nav.getBoundingClientRect(); if(r.left<n.left) nav.scrollLeft-=n.left-r.left+24; else if(r.right>n.right) nav.scrollLeft+=r.right-n.right+24}
+  document.body.classList.toggle("wide",SEC!=="itse"||APP==="bank"); document.body.classList.toggle("sec-itse",SEC==="itse");
+  const w=$("#whoAmI"); if(w){w.hidden=!(srvMode()&&SRV.me); if(SRV.me) w.innerHTML=`<b>${esc(SRV.me.name||SRV.me.id)}</b><span class="muted">${SRV.me.admin?"Administrador":esc(SRV.me.email)}</span>`}
+  $("#btnAccount").hidden=!(srvMode()&&SRV.me); ["#btnNew","#btnLoad","#btnSave"].forEach(s=>{const b=$(s); if(b) b.hidden=SEC!=="itse"}); gdUi()}
+function renderSec(){$("#exBanner").hidden=true;
+  if(SEC==="users") return renderUsers();
+  if(SEC==="sunarp"){$("#form").innerHTML=`<section class="card secempty"><h2>SUNARP</h2><p class="muted" style="margin:0">Esta sección todavía está vacía. Aquí irán las herramientas de SUNARP.</p></section>`; bar(); return}
+  $("#form").innerHTML=`<section class="card secempty"><h2>Sin secciones</h2><p class="muted" style="margin:0">Tu cuenta aún no tiene secciones asignadas. Habla con el administrador.</p></section>`; bar()}
+function secBar(){$("#barRisk").innerHTML=`<b>${SEC==="users"?"Usuarios":SEC==="sunarp"?"SUNARP":"Generador ITSE"}</b>`; $("#btnZip").hidden=true; $("#btnPv").hidden=true}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-sec]"); if(!b||!b.closest("#secNav")) return; e.preventDefault(); SEC=b.dataset.sec; try{localStorage.setItem("itse-sec",SEC)}catch(_){} if(SEC==="users"&&!USR.busy) usrLoad(); render(); window.scrollTo(0,0)});
+
+/* ---------- Usuarios (solo el administrador) ---------- */
+const USR={list:null,busy:false,err:"",pw:"",sure:""};
+const PRESET_P={itse:{itse:true},itseb:{itse:true,banco:true},sunarp:{sunarp:true},ambos:{itse:true,sunarp:true}};
+async function usrLoad(){USR.busy=true; if(SEC==="users") render();
+  try{const j=await srv("users"); USR.list=j.users; USR.quota=j.quota; USR.err=""}catch(e){USR.err=e.message} finally{USR.busy=false; usrBadge(); if(SEC==="users") render()}}
+function usrBadge(){const n=(USR.list||[]).filter(u=>u.status==="pending").length, c=$("#usrCnt"); if(c){c.textContent=n||""; c.hidden=!n}}
+const permLbl=p=>[p.itse?"ITSE":"",p.itse&&p.banco?"banco de cocinas":"",p.itse&&p.todos?"ve todo":"",p.sunarp?"SUNARP":""].filter(Boolean).join(" · ")||"sin acceso";
+function usrRow(u){const e=esc(u.email), P=u.perms||{}, dis=u.status!=="active";
+  const ck=(k,l,off)=>`<label class="chk${off?" dis":""}"><input type="checkbox" data-uperm="${k}" data-e="${e}"${P[k]?" checked":""}${off?" disabled":""}><span>${l}</span></label>`;
+  return `<div class="urow${dis?" off":""}"><div class="uinfo"><b>${esc(u.name)}</b> <span class="chip ${u.status==="active"?"ok":u.status==="disabled"?"warn":""}">${{active:"Activo",disabled:"Desactivado",rejected:"Rechazado",pending:"Pendiente"}[u.status]||u.status}</span>
+      <span class="muted">${e}${u.last?` · último ingreso ${esc(fdt(new Date(u.last).toISOString()))}`:" · aún no entra"}</span></div>
+    <div class="uperm checks">${ck("itse","ITSE")}${ck("sunarp","SUNARP")}${ck("banco","Banco de cocinas (ver y actualizar)",!P.itse)}${ck("todos","Ve y edita los expedientes de todos",!P.itse)}</div>
+    <div class="acts">${USR.pw===u.email?`<input type="text" class="upw" id="upw" placeholder="Contraseña nueva" autocomplete="off" aria-label="Contraseña nueva para ${e}"><button type="button" class="btn primary sm" data-uact="pwgo" data-e="${e}">Guardar</button><button type="button" class="btn sm" data-uact="pwx">Cancelar</button>`
+      :`<button type="button" class="btn sm" data-uact="${u.status==="active"?"dis":"act"}" data-e="${e}">${u.status==="active"?"Desactivar":"Activar"}</button><button type="button" class="btn sm" data-uact="pw" data-e="${e}">Nueva contraseña</button><button type="button" class="btn sm danger" data-uact="del" data-e="${e}">${USR.sure==="del:"+u.email?"¿Seguro? Toca otra vez":"Eliminar"}</button>`}</div></div>`}
+function renderUsers(){const L=USR.list||[], pend=L.filter(u=>u.status==="pending"), act=L.filter(u=>u.status==="active"||u.status==="disabled"), rej=L.filter(u=>u.status==="rejected");
+  let h=`<section class="card"><h2>Solicitudes de acceso${pend.length?` <span class="cnt q">${pend.length}</span>`:""}</h2>
+    ${USR.busy&&!USR.list?`<p class="muted" style="margin:0">Cargando…</p>`:USR.err?`<p class="bad" style="margin:0">${esc(USR.err)} <button type="button" class="btn sm" data-uact="reload">Reintentar</button></p>`
+    :pend.length?pend.map(u=>`<div class="urow pend"><div class="uinfo"><b>${esc(u.name)}</b><span class="muted">${esc(u.email)} · pidió ${esc([u.want&&u.want.itse?"ITSE":"",u.want&&u.want.sunarp?"SUNARP":""].filter(Boolean).join(" y ")||"acceso")} · ${esc(fdt(new Date(u.req).toISOString()))}</span></div>
+      <div class="acts"><button type="button" class="btn primary sm" data-uact="ok" data-p="itse" data-e="${esc(u.email)}">ITSE</button><button type="button" class="btn primary sm" data-uact="ok" data-p="itseb" data-e="${esc(u.email)}">ITSE + banco de cocinas</button><button type="button" class="btn sm" data-uact="ok" data-p="sunarp" data-e="${esc(u.email)}">SUNARP</button><button type="button" class="btn sm" data-uact="ok" data-p="ambos" data-e="${esc(u.email)}">ITSE + SUNARP</button><button type="button" class="btn sm danger" data-uact="no" data-e="${esc(u.email)}">Rechazar</button></div></div>`).join("")
+    :`<p class="muted" style="margin:0">No hay solicitudes pendientes. Cuando alguien se registre te llegará un correo con botones para aprobarlo; también puedes hacerlo aquí.</p>`}</section>
+  <section class="card"><h2>Usuarios</h2>
+    <div class="urow me"><div class="uinfo"><b>${esc(SRV.me.name)}</b> <span class="chip ok">Administrador</span><span class="muted">usuario «${esc(SRV.me.id)}» · ${esc(SRV.me.email)} · ve y guarda todo, con el banco completo</span></div></div>
+    ${act.length?act.map(usrRow).join(""):`<p class="muted" style="margin:8px 0 0">Aún no hay otros usuarios.</p>`}
+    <p class="muted" style="margin:10px 0 0">Los cambios se guardan al momento. «Banco de cocinas» deja ver y actualizar los certificados de las cocinas ocultas; sin él, cada uno trabaja solo con sus expedientes. ${USR.quota!=null?`Correos disponibles hoy: ${USR.quota}.`:""}</p></section>
+  ${rej.length?`<section class="card"><details><summary><b>Rechazados (${rej.length})</b></summary>${rej.map(u=>`<div class="urow off"><div class="uinfo"><b>${esc(u.name)}</b><span class="muted">${esc(u.email)}</span></div><div class="acts"><button type="button" class="btn sm" data-uact="ok" data-p="${u.want&&u.want.sunarp&&!u.want.itse?"sunarp":u.want&&u.want.sunarp?"ambos":"itse"}" data-e="${esc(u.email)}">Dar acceso</button><button type="button" class="btn sm danger" data-uact="del" data-e="${esc(u.email)}">${USR.sure==="del:"+u.email?"¿Seguro? Toca otra vez":"Eliminar"}</button></div></div>`).join("")}</details></section>`:""}`;
+  $("#form").innerHTML=h; bar(); if(USR.pw){const i=$("#upw"); if(i) i.focus()}}
+async function usrEdit(email,body,msg){try{const j=await srv("useredit",Object.assign({email},body)); const i=USR.list.findIndex(u=>u.email===email); if(i>=0) USR.list[i]=j.user; usrBadge(); render(); say(msg?msg(j):"Guardado.","ok")}catch(e){say(e.message,"err"); render()}}
+document.addEventListener("click",async e=>{if(SEC!=="users") return; const b=e.target.closest("[data-uact]"); if(!b) return; const a=b.dataset.uact, email=b.dataset.e;
+  if(a==="reload") return usrLoad();
+  if(a==="ok"){b.disabled=true; return usrEdit(email,{status:"active",perms:PRESET_P[b.dataset.p]},j=>`${j.user.name}: acceso a ${permLbl(j.user.perms)}.${j.mailed?" Se le avisó por correo.":""}`)}
+  if(a==="no"){b.disabled=true; return usrEdit(email,{status:"rejected"},j=>`Solicitud de ${j.user.name} rechazada.${j.mailed?" Se le avisó por correo.":""}`)}
+  if(a==="dis") return usrEdit(email,{status:"disabled"},j=>`${j.user.name} ya no puede entrar.`);
+  if(a==="act") return usrEdit(email,{status:"active"},j=>`${j.user.name} puede volver a entrar.`);
+  if(a==="pw"){USR.pw=email; return render()} if(a==="pwx"){USR.pw=""; return render()}
+  if(a==="pwgo"){const v=($("#upw")||{}).value||""; try{await srv("userpw",{email,pass:v}); USR.pw=""; render(); say("Contraseña cambiada. Avísale a la persona su contraseña nueva.","ok")}catch(err){say(err.message,"err")} return}
+  if(a==="del"){if(USR.sure!=="del:"+email){USR.sure="del:"+email; render(); setTimeout(()=>{if(USR.sure==="del:"+email){USR.sure=""; if(SEC==="users") render()}},5000); return}
+    USR.sure=""; try{const j=await srv("userdel",{email}); USR.list=USR.list.filter(u=>u.email!==email); usrBadge(); render(); say(j.msg,"ok")}catch(err){say(err.message,"err")}}});
+document.addEventListener("change",e=>{if(SEC!=="users") return; const el=e.target; if(!el.dataset.uperm) return; const u=(USR.list||[]).find(x=>x.email===el.dataset.e); if(!u) return;
+  const p=Object.assign({},u.perms,{[el.dataset.uperm]:el.checked}); usrEdit(u.email,{perms:p},j=>`${j.user.name}: ${permLbl(j.user.perms)}.`)});
+
+/* ---------- Mi cuenta: cambiar la contraseña ---------- */
+function mdlOpen(title,html){$("#mdlT").textContent=title; $("#mdlB").innerHTML=html; $("#mdl").hidden=false; setTimeout(()=>{const i=$("#mdlB input"); if(i) i.focus()},30)}
+function mdlClose(){$("#mdl").hidden=true; $("#mdlB").innerHTML=""}
+document.addEventListener("click",e=>{if(e.target.closest("#btnAccount")){mdlOpen("Mi cuenta",`<p class="muted" style="margin:0 0 10px">${esc(SRV.me.name)} · ${esc(SRV.me.admin?"usuario «"+SRV.me.id+"» (administrador)":SRV.me.email)}<br>Acceso: ${esc(permLbl(SRV.me.perms))}</p>
+    <form id="pwForm" class="grid" autocomplete="off"><div class="f c12"><label for="pwOld">Contraseña actual</label><input type="password" id="pwOld" autocomplete="current-password"></div>
+    <div class="f c6"><label for="pwNew">Contraseña nueva</label><input type="password" id="pwNew" autocomplete="new-password"></div><div class="f c6"><label for="pwNew2">Repítela</label><input type="password" id="pwNew2" autocomplete="new-password"></div>
+    <p class="lg-err c12" id="pwErr" role="alert"></p><div class="acts c12"><button type="submit" class="btn primary">Cambiar contraseña</button><button type="button" class="btn" data-mdl="close">Cerrar</button></div></form>`); return}
+  if(e.target.closest('[data-mdl="close"]')||e.target.id==="mdl") mdlClose()});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#mdl").hidden) mdlClose()});
+document.addEventListener("submit",async e=>{if(e.target.id!=="pwForm") return; e.preventDefault(); const o=$("#pwOld").value, n=$("#pwNew").value, n2=$("#pwNew2").value, er=$("#pwErr");
+  if(n.length<6){er.textContent="La contraseña nueva debe tener al menos 6 caracteres."; return} if(n!==n2){er.textContent="Las contraseñas nuevas no coinciden."; return}
+  try{const j=await srv("pw",{old:o,nw:n}); SRV.tok=j.tok; try{localStorage.setItem(TOKK,j.tok)}catch(_){} mdlClose(); say(j.msg,"ok")}catch(err){er.textContent=err.message}});
 
 /* ---------- login ---------- */
 function sha256(str){const b=new TextEncoder().encode(str),K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2];
@@ -3367,16 +3819,58 @@ function sha256(str){const b=new TextEncoder().encode(str),K=[0x428a2f98,0x71374
     for(let i=0;i<64;i++){const t1=(h+(r(e,6)^r(e,11)^r(e,25))+((e&f)^(~e&g))+K[i]+w[i])|0,t2=((r(a,2)^r(a,13)^r(a,22))+((a&bb)^(a&c)^(bb&c)))|0;h=g;g=f;f=e;e=(d+t1)|0;d=c;c=bb;bb=a;a=(t1+t2)|0}
     H=H.map((v,i)=>(v+[a,bb,c,d,e,f,g,h][i])|0)}
   return H.map(v=>(v>>>0).toString(16).padStart(8,"0")).join("")}
-const ACCESS="d987a41d4178094c88609842c75afb16d34082544e5ece99496c81310b9b1ec4", SESS="itse-sesion";
-function isIn(){try{return sessionStorage.getItem(SESS)===ACCESS}catch(e){return window.__itseIn===true}}
-function lock(){document.body.classList.add("locked"); setTimeout(()=>{const u=$("#lgUser"); if(u) u.focus()},50)}
-function unlock(){document.body.classList.remove("locked"); APP="recent"; try{localStorage.setItem("itse-app",APP)}catch(_){} render(); gdUi(); if(S.logo&&!S._logoTrimmed){prepLogo(S.logo).then(u=>{S.logo=u;S._logoTrimmed=true;persist();render()}).catch(()=>{})}}
-$("#loginForm").addEventListener("submit",e=>{e.preventDefault();
-  const u=$("#lgUser").value.trim().toLowerCase(), p=$("#lgPass").value;
-  if(sha256(u+"\u0000"+p)===ACCESS){try{sessionStorage.setItem(SESS,ACCESS)}catch(_){window.__itseIn=true} $("#lgErr").textContent=""; $("#lgPass").value=""; unlock(); if(gdAvail()&&gdPref().on) gdStart().then(ok=>{if(ok) render()})}
-  else {$("#lgErr").textContent="Usuario o contraseña incorrectos."; $("#lgPass").value=""; $("#lgPass").focus()}});
-$("#btnLogout").addEventListener("click",()=>{try{sessionStorage.removeItem(SESS)}catch(_){} window.__itseIn=false; lock()});
-if(isIn()) unlock(); else lock();
+const ACCESS="", SESS="itse-sesion";
+function isIn(){try{return !!ACCESS&&sessionStorage.getItem(SESS)===ACCESS}catch(e){return window.__itseIn===true}}
+// nada de la aplicación se ve hasta entrar: el cuerpo de la página no tiene la clase «authed»
+function lgShow(which,msg){const map={wait:"#lgWait",login:"#loginForm",reg:"#regForm",done:"#regDone"};
+  for(const k in map){const el=$(map[k]); if(el) el.hidden=k!==which}
+  if(which==="wait"&&msg) $("#lgWait").textContent=msg;
+  setTimeout(()=>{const f=which==="login"?$("#lgUser"):which==="reg"?$("#rgName"):null; if(f&&!f.value) f.focus(); else if(which==="login"&&f) $("#lgPass").focus()},40)}
+function lock(){document.body.classList.remove("authed"); zvClose(); mdlClose(); lgShow("login")}
+function unlock(){document.body.classList.add("authed"); APP="recent"; try{localStorage.setItem("itse-app",APP)}catch(_){}
+  secFix(); render(); gdUi(); if(S.logo&&!S._logoTrimmed){prepLogo(S.logo).then(u=>{S.logo=u;S._logoTrimmed=true;persist();render()}).catch(()=>{})}}
+// con el servidor: cada usuario trabaja con su propia copia local y su propia lista
+function authed(){const me=SRV.me; STORE="itse-generador-v3:"+me.id; GD_KEY="itse-drive:"+me.id;
+  let st=null; try{const raw=localStorage.getItem(STORE)||(me.admin?localStorage.getItem("itse-generador-v3"):null); if(raw) st=JSON.parse(raw)}catch(_){}
+  GD.map={}; GD.list=null; GD.err=""; GD.lastSave=0; GD.dirty=false; GD.bankDrive=false; GD.bcache.clear(); BANKM=null; BKV.pend.clear(); BKV.thumbs.clear(); USR.list=null; usrBadge();
+  loadState(st||blank()); persistLocal(); try{if(localStorage.getItem(GD_KEY+":dirty")) GD.dirty=true}catch(_){}
+  SEC=canItse()?"itse":canSunarp()?"sunarp":"none"; unlock(); if(me.admin) usrLoad(); gdInit()}
+async function srvResume(){let t=""; try{t=localStorage.getItem(TOKK)||""}catch(_){} if(!t) return false; SRV.tok=t;
+  try{const j=await srv("me",{self:SRV.url},{tries:3}); SRV.me=j.me; if(j.tok){SRV.tok=j.tok; try{localStorage.setItem(TOKK,j.tok)}catch(_){}} return true}
+  catch(e){if(e.code==="auth"){SRV.tok=""; try{localStorage.removeItem(TOKK)}catch(_){} return false} throw e}}
+function srvLost(msg){SRV.me=null; SRV.tok=""; try{localStorage.removeItem(TOKK)}catch(_){} clearTimeout(gdT); GD.saving=false; lock(); $("#lgErr").textContent=msg||"Tu sesión terminó. Vuelve a entrar."}
+$("#loginForm").addEventListener("submit",async e=>{e.preventDefault();
+  const u=$("#lgUser").value.trim(), p=$("#lgPass").value, er=$("#lgErr"), go=$("#lgGo");
+  if(!u||!p){er.textContent="Escribe tu usuario y tu contraseña."; (u?$("#lgPass"):$("#lgUser")).focus(); return}
+  if(!srvMode()){
+    if(ACCESS&&sha256(u.toLowerCase()+"\u0000"+p)===ACCESS){try{sessionStorage.setItem(SESS,ACCESS)}catch(_){window.__itseIn=true} er.textContent=""; $("#lgPass").value=""; unlock()}
+    else {er.textContent="Usuario o contraseña incorrectos."; $("#lgPass").value=""; $("#lgPass").focus()} return}
+  go.disabled=true; go.textContent="Entrando…"; er.textContent="";
+  try{const j=await srv("login",{user:u,pass:p,self:SRV.url}); SRV.tok=j.tok; SRV.me=j.me; try{localStorage.setItem(TOKK,j.tok)}catch(_){} $("#lgPass").value=""; authed()}
+  catch(err){er.textContent=err.message; $("#lgPass").value=""; $("#lgPass").focus()}
+  finally{go.disabled=false; go.textContent="Ingresar"}});
+$("#regForm").addEventListener("submit",async e=>{e.preventDefault(); const er=$("#rgErr"), go=$("#rgGo");
+  const name=$("#rgName").value.trim(), email=$("#rgEmail").value.trim(), p1=$("#rgPass").value, p2=$("#rgPass2").value, want={itse:$("#rgItse").checked,sunarp:$("#rgSunarp").checked};
+  if(name.length<2){er.textContent="Escribe tu nombre."; $("#rgName").focus(); return}
+  if(!/^[^@\s]+@[^@\s]+\.[a-z]{2,}$/i.test(email)){er.textContent="Escribe un correo válido."; $("#rgEmail").focus(); return}
+  if(p1.length<6){er.textContent="La contraseña debe tener al menos 6 caracteres."; $("#rgPass").focus(); return}
+  if(p1!==p2){er.textContent="Las contraseñas no coinciden."; $("#rgPass2").focus(); return}
+  if(!want.itse&&!want.sunarp){er.textContent="Marca a qué quieres acceder: ITSE, SUNARP o ambos."; return}
+  go.disabled=true; go.textContent="Enviando…"; er.textContent="";
+  try{const j=await srv("register",{name,email,pass:p1,want}); $("#regDoneMsg").textContent=j.msg; $("#regForm").reset(); $("#rgItse").checked=true; $("#lgUser").value=email; lgShow("done")}
+  catch(err){er.textContent=err.message}
+  finally{go.disabled=false; go.textContent="Pedir acceso"}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-lg]"); if(!b) return; e.preventDefault(); $("#lgErr").textContent=""; $("#rgErr").textContent=""; lgShow(b.dataset.lg)});
+$("#btnLogout").addEventListener("click",async()=>{
+  if(srvMode()){const b=$("#btnLogout"); b.disabled=true; b.textContent="Saliendo…"; try{await gdFlush()}catch(_){} try{localStorage.removeItem(TOKK)}catch(_){} location.reload(); return}
+  try{sessionStorage.removeItem(SESS)}catch(_){} window.__itseIn=false; lock()});
+// arranque: en la web, con el servidor (la sesión dura 7 días y se renueva sola); en el archivo de la PC, la clave de siempre
+(()=>{const reg=$("#lgReg"); if(reg) reg.hidden=!srvMode(); const ul=$("#lgUserL"); if(ul) ul.textContent=srvMode()?"Usuario o correo":"Usuario";
+  if(!srvMode()){if(isIn()) unlock(); else lgShow("login"); return}
+  let has=false; try{has=!!localStorage.getItem(TOKK)}catch(_){}
+  if(!has){lgShow("login"); return}
+  lgShow("wait","Verificando tu sesión…");
+  srvResume().then(ok=>{if(ok) authed(); else lgShow("login")}).catch(err=>{lgShow("login"); $("#lgErr").textContent=err.message})})();
 </script>
 
 </body></html>
