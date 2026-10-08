@@ -3475,6 +3475,7 @@ const privNeeded=()=>!String(DEFAULT_APODERADOS||"").trim()||!!(MIMG.firma&&MIMG
 async function gdInit(){if(!gdReady()&&!canBank()) return; GD.busy="Leyendo tus expedientes…"; gdUi();
   try{await Promise.all([gdReady()?gdRefreshList().catch(e=>{GD.err=e.message}):null,canBank()?gdLoadBank().catch(e=>console.warn(e)):null,canItse()?gdLoadPriv().catch(e=>console.warn(e)):null]);
     await gdDrainQueue().catch(e=>console.warn(e));
+    if(isAdmin()&&!GD.root) srv("diag").then(j=>{GD.root=j.root||""; if(APP==="recent"&&SEC==="itse") gdUi()}).catch(()=>{});
     if(gdReady()&&expHasData(S)&&(GD.dirty||!GD.map[expUid()])) await gdSave()}
   finally{GD.busy=""; gdUi(); render()}}
 
@@ -3604,8 +3605,8 @@ function bkTypeList(kind){const L=(f,t,lbl)=>({f,t,lbl:lbl||bkCap(bkLbl({f,t,rep
   return out}
 const bkTypeKey=x=>x.f+"|"+x.t;
 function bkDocTitle(d){return bkCap(bkLbl(d))+(d.f==="dni"&&d.rep?" · "+bkWho(d.rep):"")}
-function bkThumbAttr(id){const t=BKV.thumbs.get(id); return t&&t!=="x"?` style="background-image:url(${t})"`:""}
-function bkThumbBtn(view,id,ext,lbl){return `<button type="button" class="bxth${BKV.thumbs.get(id)&&BKV.thumbs.get(id)!=="x"?" has":""}" data-bkview="${esc(view)}" data-thumb="${esc(id)}"${bkThumbAttr(id)} aria-label="Ver ${esc(lbl)} en grande" title="Ver en grande">${BKV.thumbs.get(id)&&BKV.thumbs.get(id)!=="x"?"":esc(String(ext||"").toUpperCase().slice(0,4))}</button>`}
+function bkThumbAttr(id){let t=BKV.thumbs.get(id); if(!t&&id[0]!=="p"){const d=bkDocById(id), c=bkThCached(d); if(c){BKV.thumbs.set(id,c); t=c}} return t&&t!=="x"?` style="background-image:url(${t})"`:""}
+function bkThumbBtn(view,id,ext,lbl){const st=bkThumbAttr(id); return `<button type="button" class="bxth${BKV.thumbs.get(id)&&BKV.thumbs.get(id)!=="x"?" has":""}" data-bkview="${esc(view)}" data-thumb="${esc(id)}"${st} aria-label="Ver ${esc(lbl)} en grande" title="Ver en grande">${BKV.thumbs.get(id)&&BKV.thumbs.get(id)!=="x"?"":esc(String(ext||"").toUpperCase().slice(0,4))}</button>`}
 function bkDocRow(kind,x,d){const v=bkValidity(d), k=bkKey(kind,x.id);
   return `<li class="bxd">${bkThumbBtn(k+":"+d.id,d.id,d.ext,bkDocTitle(d))}<div class="bxdi"><span class="bxdt">${esc(bkDocTitle(d))}</span><span class="muted bxfn">${esc(d.name)}</span></div>
     <div class="bxda">${v?`<span class="chip ${v.c}">${esc(v.t)}</span>`:""}<button type="button" class="btn sm" data-bkrepl="${esc(k+":"+d.id)}">Reemplazar…</button></div></li>`}
@@ -3666,8 +3667,12 @@ function bkDocById(id){const B=bank(); if(!B) return null; for(const x of [...B.
 function bkPendById(pid){for(const L of BKV.pend.values()){const it=L.find(i=>"p"+i.pid===pid); if(it) return it} return null}
 async function bkThumbFor(file){if(/\.pdf$/i.test(file.name)||/pdf$/.test(file.type)){const lib=await oPdf(), pdf=await lib.getDocument({data:new Uint8Array(await file.arrayBuffer()),isEvalSupported:false}).promise; return oThumb(await oRenderPage(await pdf.getPage(1),220),180)}
   return oThumb(await oImgCanvas(file,400),180)}
+// las miniaturas quedan guardadas en este navegador (por el contenido del archivo): la próxima vez salen al instante
+const bkThKey=d=>"itse-th:"+(d.sha||d.gid||d.id);
+function bkThCached(d){try{return d&&localStorage.getItem(bkThKey(d))||""}catch(_){return ""}}
+function bkThStore(d,url){try{if(d&&url&&url.length<60000) localStorage.setItem(bkThKey(d),url)}catch(_){}}
 async function bkThumbPump(){while(bkTN<2&&bkTQ.length){const id=bkTQ.shift(); bkTN++;
-  (async()=>{let url="x"; try{if(id[0]==="p"&&!bkDocById(id)){const it=bkPendById(id); url=it&&it.thumb||(it?await bkThumbFor(it.file):"x")} else {const d=bkDocById(id); if(d) url=await bkThumbFor(await bkFileA(d))}}catch(e){console.warn(e)}
+  (async()=>{let url="x"; try{if(id[0]==="p"&&!bkDocById(id)){const it=bkPendById(id); url=it&&it.thumb||(it?await bkThumbFor(it.file):"x")} else {const d=bkDocById(id); if(d){url=bkThCached(d); if(!url){url=await bkThumbFor(await bkFileA(d)); bkThStore(d,url)}}}}catch(e){console.warn(e)}
     BKV.thumbs.set(id,url); if(url!=="x") document.querySelectorAll(`[data-thumb="${CSS.escape(id)}"]`).forEach(el=>{el.style.backgroundImage=`url(${url})`; el.textContent=""; el.classList.add("has")})})().finally(()=>{bkTN--; bkThumbPump()})}}
 // llega un archivo al recuadro: se lee (texto u OCR), se reconoce y se propone su lugar
 async function bkDrop(k,files,slotId){const [kind,id]=[k.slice(0,k.indexOf(":")),k.slice(k.indexOf(":")+1)], x=bkEnt(kind,id); if(!x) return; const L=BKV.pend.get(k)||[]; BKV.pend.set(k,L);
